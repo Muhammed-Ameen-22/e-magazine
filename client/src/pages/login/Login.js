@@ -14,7 +14,7 @@ function Login() {
   };
 
   const [name, setName] = useState("");
-  const [cd, setCd] = useState("");
+  const [cd, setCd] = useState("BCA");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -23,7 +23,7 @@ function Login() {
     e.preventDefault();
     setError(false);
     try {
-      console.log(process.env);
+      console.log("HI");
       const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/createUser", {
         name,
         cd,
@@ -31,6 +31,7 @@ function Login() {
         password
         
       });
+      console.log("RES"+res);
       res.data && window.location.replace("/login");
     } catch (err) {
       setError(true);
