@@ -91,6 +91,7 @@ app.post("/createUser", async (req, res) => {
     console.log("hi",req.body.name,req.body.password);
     const hashedPassword = await bcrypt.hash(req.body.password,10);
     db.getConnection( async (err, connection) => {
+        console.log("LOGIN ENTERED")
      if (err) throw (err)
      const sqlSearch = "SELECT * FROM userTable WHERE user = ?"
      const search_query = mysql.format(sqlSearch,[user])
@@ -121,3 +122,42 @@ app.post("/createUser", async (req, res) => {
     }) //end of app.post()
     app.listen(SERVER_PORT,
         () => console.log(`Server Started on port ${SERVER_PORT}...`));
+
+
+
+        app.post("/loginUser", async (req, res)=> {
+            const user = req.body.email
+            const password = req.body.password
+            console.log(user , password)
+            db.getConnection ( async (err, connection)=> {
+             if (err) throw (err)
+             const sqlSearch = "Select * from tbl_user where user_Email = ?"
+             const search_query = mysql.format(sqlSearch,[user])
+             await connection.query (search_query, async (err, result) => {
+              connection.release()
+              
+              if (err) throw (err)
+              if (result.length == 0) {
+               console.log("--------> User does not exist")
+               res.sendStatus(404)
+              } 
+              else {
+                  console.log("DATA FOUND")
+                  console.log(result[0])
+                 const hashedPassword = result[0].user_Pass
+                 //get the hashedPassword from result
+                if (await bcrypt.compare(password, hashedPassword)) {
+                console.log("---------> Login Successful")
+                res.send(`${user} is logged in!`)
+                // window.location.replace("/Write")
+                // this.props.history.replace('/Write');
+                } 
+                else {
+                console.log("---------> Password Incorrect")
+                res.send("Password incorrect!")
+                alert("Password Incorrect")
+                } //end of bcrypt.compare()
+              }//end of User exists i.e. results.length==0
+             }) //end of connection.query()
+            }) //end of db.connection()
+            }) //end of app.post()

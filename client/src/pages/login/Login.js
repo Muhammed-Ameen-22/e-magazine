@@ -19,7 +19,23 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSignIn = async(e) =>{
+    e.preventDefault();
+    setError(false);
+    try {
+      console.log("Login");
+      const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/loginUser", {
+        email,
+        password
+      });
+      console.log("RES"+res);
+      // res.data && window.location.replace("/Write");
+    } catch (err) {
+      setError(true);
+    }
+  }
+  
+  const handleSignUp = async (e) => {
     e.preventDefault();
     setError(false);
     try {
@@ -37,6 +53,8 @@ function Login() {
       setError(true);
     }
   };
+
+ 
 
   return (
     
@@ -77,16 +95,16 @@ function Login() {
           {/* <Components.Input type="text" placeholder="Course/Department" /> */}
           <Components.Input type="email" placeholder="Email" name="email" onChange={(e) => setEmail(e.target.value)}/>
           <Components.Input type="password" placeholder="Password" name="password" onChange={(e) => setPassword(e.target.value)}/>
-          <Components.Button onClick={handleSubmit}>Sign Up</Components.Button>
+          <Components.Button onClick={handleSignUp}>Sign Up</Components.Button>
         </Components.Form>
       </Components.SignUpContainer>
       <Components.SignInContainer signingIn={signIn} >
         <Components.Form>
           <Components.Title>Sign in</Components.Title>
-          <Components.Input type="email" placeholder="Email" name="email"/>
-          <Components.Input type="password" placeholder="Password" name="email"/>
+          <Components.Input type="email" placeholder="Email" name="email" onChange={(e) => setEmail(e.target.value)}/>
+          <Components.Input type="password" placeholder="Password" name="password" onChange={(e) => setPassword(e.target.value)}/>
           <Components.Anchor href="#">Forgot your password?</Components.Anchor>
-          <Components.Button>Sign In</Components.Button>
+          <Components.Button onClick={handleSignIn}>Sign In</Components.Button>
         </Components.Form>
       </Components.SignInContainer>
       <Components.OverlayContainer signingIn={signIn} >
