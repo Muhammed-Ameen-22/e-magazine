@@ -1,10 +1,18 @@
 import React from "react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Components from "./log_comp.js";
 import "./login.css";
+import { useHistory } from "react-router-dom"; 
+
+
 
 function Login() {
+
+  axios.defaults.withCredentials = true;
+
+
+  let history = useHistory();
   const [signIn, toggle] = React.useState(true);
 
   const [checked, setChecked] = React.useState(false);
@@ -18,22 +26,89 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [errorMessage,setErrorMessage]=useState("")
 
-  const handleSignIn = async(e) =>{
+
+
+
+  const [loginStatus, setLoginStatus] = useState("");
+
+  const handleSignIn = async(e) => {
     e.preventDefault();
     setError(false);
-    try {
-      console.log("Login");
+    try{
       const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/loginUser", {
-        email,
-        password
-      });
-      console.log("RES"+res);
-      // res.data && window.location.replace("/Write");
-    } catch (err) {
-      setError(true);
-    }
+      email: email,
+      password: password,
+    }).then((response) => {
+      if (response.data.message) {
+        setLoginStatus(response.data.message);
+      } else {
+        localStorage.setItem("loggedIn",true);
+        // setLoginStatus(response.data[0].user_Email);
+        history.push("/Write")
+      }
+    });
   }
+  catch (err) {
+    setError(true);
+  }}
+  ;
+
+  useEffect(() => {
+    
+    axios.get(process.env.REACT_APP_SERVER_URL+"/loginUser").then((response) => {
+    
+      // const userName=response.data.user[0].user_Name;
+      // console.log(userName)
+      if (response.data.loggedIn == true) {
+        localStorage.setItem("loggedIn",true);
+        history.push("/Write")
+        // setLoginStatus(response.data.user[0].user_Email);
+       
+        // localStorage.setItem("username",userName);
+        
+          // localStorage.setItem("userName",response.data[0].user_Name);
+        
+          history.push("/Write")
+      }
+    });
+  }, []);
+
+
+
+
+
+
+  // const handleSignIn = async(e) =>{
+  //   e.preventDefault();
+  //   setError(false);
+  //   try {
+  //     console.log("Login");
+  //     const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/loginUser", {
+  //       email,
+  //       password
+  //     // }).then((response)=>{
+  //     //   if(response.data.loggedIn)
+  //     //   {
+  //     //     console.log("REACHED")
+  //     //     localStorage.setItem("loggedIn",false);
+  //     //     localStorage.setItem("username",response.data.username);
+  //     //     history.push("/Write")
+  //     //   }
+  //     //   else
+  //     //   {
+  //     //     setErrorMessage(response.data.message)
+  //     //   }
+
+  //     });
+  //     console.log("RES"+res);
+      
+  //     // res.data && window.location.replace("/Write");
+  //   } catch (err) {
+  //     setError(true);
+  //   }
+  // }
   
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -49,7 +124,8 @@ function Login() {
       });
       console.log("RES"+res);
       res.data && window.location.replace("/login");
-    } catch (err) {
+    }
+     catch (err) {
       setError(true);
     }
   };
@@ -105,6 +181,9 @@ function Login() {
           <Components.Input type="password" placeholder="Password" name="password" onChange={(e) => setPassword(e.target.value)}/>
           <Components.Anchor href="#">Forgot your password?</Components.Anchor>
           <Components.Button onClick={handleSignIn}>Sign In</Components.Button>
+          <h1>{loginStatus}</h1>
+
+          <h3 style={{color:"red", fontSize:"13px"}}>{errorMessage}</h3>
         </Components.Form>
       </Components.SignInContainer>
       <Components.OverlayContainer signingIn={signIn} >

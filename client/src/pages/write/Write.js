@@ -1,9 +1,11 @@
-import React,{ useContext, useState } from "react";
+import React,{ useContext, useState , useEffect } from "react";
 import "./write.css";
 import axios from "axios";
 import { Context } from "../../context/Context";
 
 export default function Write() {
+  const [error, setError] = useState(false);
+  const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState(null);
@@ -11,25 +13,38 @@ export default function Write() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newPost = {
-      username: user.username,
-      title,
-      desc,
-    };
-    if (file) {
-      const data =new FormData();
-      const filename = Date.now() + file.name;
-      data.append("name", filename);
-      data.append("file", file);
-      newPost.photo = filename;
-      try {
-        await axios.post("/upload", data);
-      } catch (err) {}
-    }
+    setError(false);
+    // const newPost = {
+    //   username: user.username,
+    //   title,
+    //   desc,
     try {
-      const res = await axios.post("/posts", newPost);
-      window.location.replace("/post/" + res.data._id);
-    } catch (err) {}
+    const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/createPost", {
+      image,
+      title,
+      desc
+    });  
+    console.log("RES"+res);
+  }
+  catch (err) {
+   setError(true);
+ }
+
+  // };
+    // if (file) {
+    //   const data =new FormData();
+    //   const filename = Date.now() + file.name;
+    //   data.append("name", filename);
+    //   data.append("file", file);
+    //   newPost.photo = filename;
+    //   try {
+    //     await axios.post("/upload", data);
+    //   } catch (err) {}
+    // }
+    // try {
+    //   const res = await axios.post("/posts", newPost);
+    //   window.location.replace("/post/" + res.data._id);
+    // } catch (err) {}
   };
   return (
     <div className="write">
@@ -43,12 +58,14 @@ export default function Write() {
           </label>
           <input
             type="file"
+            name='image'
             id="fileInput"
-            style={{ display: "none" }}
-            onChange={(e) => setFile(e.target.files[0])}
+            // style={{ display: "none" }}
+            onChange={(e) => setImage(e.target.files[0])}
           />
           <input
             type="text"
+            name= 'title'
             placeholder="Title"
             className="writeInput"
             autoFocus={true}
@@ -59,11 +76,12 @@ export default function Write() {
           <textarea
             placeholder="Tell your story..."
             type="text"
+            name='desc'
             className="writeInput writeText"
             onChange={e=>setDesc(e.target.value)}
           ></textarea>
         </div>
-        <button className="writeSubmit" type="submit">
+        <button className="writeSubmit" type="submit" onClick={handleSubmit}>
           Publish
         </button>
       </form>
