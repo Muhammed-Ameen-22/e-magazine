@@ -92,9 +92,10 @@ export default function Write() {
 const handleSubmit = async (e) => {
   e.preventDefault();
   const newPost = {
-    username: user.username,
+    //username: user.username,
     title,
     desc,
+
   };
   if (file) {
     const data =new FormData();
@@ -103,12 +104,21 @@ const handleSubmit = async (e) => {
     data.append("file", file);
     newPost.photo = filename;
     try {
-      await axios.post("/upload", data);
+      //const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/createPost", data);
+      
     } catch (err) {}
   }
   try {
-    const res = await axios.post("/posts", newPost);
-    window.location.replace("/post/" + res.data._id);
+    const res = await axios.post(process.env.REACT_APP_SERVER_URL+"/create/createpost", newPost);
+    console.log("status",res);
+    if(res.status == "200"){
+      window.alert("Successfully submitted. Wait for admin approval !");
+      window.location.replace("/");
+    }
+    else{
+      window.alert("ERROR! Something went wrong. Please try again");
+    }
+    //window.location.replace("/post/" + res.data._id);
   } catch (err) {}
 };
 return (

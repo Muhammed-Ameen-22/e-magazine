@@ -1,24 +1,32 @@
+
+// import { createRequire } from 'module';
+// const path = require('path');
+// require("dotenv").config({ path: path.resolve('dotenv.env') });
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { dirname } from 'path';
+import posts from './routes/posts.js';
+import mysql from 'mysql';
+import bcrypt from 'bcrypt';
+import session from 'express-session';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url';
 const path = require('path');
 require("dotenv").config({ path: path.resolve('dotenv.env') });
 
-const express = require("express");
-const mysql = require("mysql");
-const bcrypt = require("bcrypt")
-// import jwt from 'jsonwebtoken';
+console.log("This is host",process.env);
 
-const cors = require('cors');
-const { response } = require('express');
+global.__basedir = dirname(fileURLToPath(import.meta.url));
 
 
 
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-
-const jwt = require('jsonwebtoken')
 
 const app = express();
-
 app.use(express.json());
 app.use(
     cors({
@@ -61,8 +69,8 @@ const db = mysql.createPool({
     port: DB_PORT
 })
 
-console.log(DB_DATABASE, DB_HOST, DB_USER, DB_PASSWORD, DB_PORT);
-console.log(db);
+// console.log(DB_DATABASE, DB_HOST, DB_USER, DB_PASSWORD, DB_PORT);
+// console.log(db);
 
 
 
@@ -163,54 +171,6 @@ app.listen(SERVER_PORT,
 
 
 
-// app.post("/loginUser", async (req, res)=> {
-//     console.log('LOGIN BACKEND')
-//     const user = req.body.email
-//     const password = req.body.password
-//     console.log(user , password)
-//     db.getConnection ( async (err, connection)=> {
-//      if (err) throw (err)
-//      const sqlSearch = "Select * from tbl_user where user_Email = ?"
-//      const search_query = mysql.format(sqlSearch,[user])
-//      await connection.query (search_query, async (err, result) => {
-//       connection.release()
-
-//       if (err) throw (err)
-//       if (result.length == 0) {
-//        console.log("--------> User does not exist")
-//     //    res.json({loggedIn: false, message: "User does not exist"})
-//     //    res.sendStatus(404)
-//       } 
-//       else {
-//           console.log("DATA FOUND")
-//           console.log(result[0])
-//          const hashedPassword = result[0].user_Pass
-//          //get the hashedPassword from result
-//         if (await bcrypt.compare(password, hashedPassword,(error,response)=>{
-//             req.session.user = result;
-//             console.log(req.session.user);
-//         console.log("---------> Login Successful")
-//         // res.send(`${user} is logged in!`)
-
-//         // res.json({loggedIn: true, username: result[0].user_Name })
-//         // res.redirect('http://localhost:3000/Write')
-//         // window.location.replace("/Write")
-//         // this.props.history.replace('/Write');
-
-//         }));
-
-
-//         else {
-//         console.log("---------> Password Incorrect")
-//         // res.json({loggedIn: false, message: "Wrong Password"})
-
-//         alert("Password Incorrect")
-//         } //end of bcrypt.compare()
-//         res.end();
-//       }//end of User exists i.e. results.length==0
-//      }) //end of connection.query()
-//     }) //end of db.connection()
-//     }) //end of app.post()l
 
 
 app.get("/loginUser", (req, res) => {
@@ -251,10 +211,12 @@ app.post("/loginUser", (req, res) => {
                         // req.session.user({ attributes: ['id', 'name', 'cd', 'email'] }) = result;
                         req.session.user=result[0].user_Name;
              
-                        console.log(result[0].user_ID);
-
+                        
+                        //req.session.userId = result[0].user_ID;
                         var session=req.session;
                         session.username=result[0].user_Name;
+                        session.user_identity = result[0].user_ID;
+
                         // console.log(session);
                         
                         console.log("This is session",req.session);
@@ -294,3 +256,6 @@ app.get("/logout", (req, res) => {
     
       res.end();
 });
+
+
+app.use('/create', posts);

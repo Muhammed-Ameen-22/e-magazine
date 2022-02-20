@@ -19,6 +19,7 @@ function App() {
           {/* <Route path='/services' component={Services} /> */}
           <Route path='/Write' component={Write} />
           <Route path='/Login' component={Login} />
+        
         </Switch>
       </Router>
     </>
