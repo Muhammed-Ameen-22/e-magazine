@@ -26,7 +26,7 @@ export const createPost = async (req, res) => {
 
 
 
-    const image = req.body.image;
+    const image = re.body.image;
     const title = req.body.title;
     const desc = req.body.desc;
     const status = 'pending'
