@@ -24,10 +24,12 @@ console.log("This is host",process.env);
 global.__basedir = dirname(fileURLToPath(import.meta.url));
 
 
-
-
 const app = express();
 app.use(express.json());
+
+// app.use(express.json({limit: '50mb'}));
+// app.use(express.urlencoded({limit: '50mb'}));
+
 app.use(
     cors({
         origin: ["http://localhost:3000"],
@@ -35,8 +37,12 @@ app.use(
         credentials: true,
     })
 );
+
+
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({limit: '10mb', extended: true}))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true , parameterLimit:50000 }));
 
 app.use(
     session({
@@ -49,8 +55,6 @@ app.use(
         },
     })
 );
-
-
 
 
 const DB_HOST = process.env.DB_HOST
