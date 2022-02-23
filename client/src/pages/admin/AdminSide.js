@@ -18,7 +18,7 @@ export const AdminSide = [
   },
   {
     title: 'Posts',
-    path: '/Posts',
+    path: '/Postview',
     icon: <FaIcons.FaEnvelopeOpenText />,
     cName: 'nav-text'
   },

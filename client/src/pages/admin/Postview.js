@@ -1,11 +1,10 @@
 import React , {useState,useEffect} from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-
+import { DataGrid } from '@mui/x-data-grid';
 
 import styled from 'styled-components';
 
 
-const UserWrapper = styled.div`
+const PostWrapper = styled.div`
     width: 55%;
     display: flex;
     flex-direction: column;
@@ -18,52 +17,52 @@ scrollbar-width: none;
 
 `;
 
-export default function Users() {
+export default function Postview() {
 
-  const [user, setUser] = useState([]);
-  const fetchUsers = async () => {
-    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetch/getAllUsers", {
+  const [content, setContent] = useState([]);
+  const fetchPosts = async () => {
+    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getAllPosts", {
       // mode: 'no-cors',
         credentials: 'include',
     });
     res = await res.json();
     // console.log("this is res",res);
-    res = res.map(({ user_ID: id, ...rest }) => ({ id, ...rest }));
+    res = res.map(({ content_Id: id, ...rest }) => ({ id, ...rest }));
 
     
 
     // res.forEach((item, i) => { item.id = i + 1; });
     // console.log('res', res) 
-    setUser(res)
+    setContent(res)
 };
 
 useEffect(() => {
-  fetchUsers();
+  fetchPosts();
 }, []);
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 50 },
-  { field: 'user_Email', headerName: 'User Email', width: 180 },
-  { field: 'user_Name', headerName: 'User Name', editable: true, width: 150 },
-  { field: 'user_CD', headerName: 'User Course/Department', editable: true, width: 150 },
+  { field: 'content_Title', headerName: 'Title', width: 180 },
+  { field: 'content', headerName: 'Content', editable: true, width: 150 },
+  { field: 'content_Status', headerName: 'Status', editable: true, width: 150 },
   
 ];
 
 
 
 
-  return <UserWrapper>
+  return <PostWrapper>
     <div style={{height: 400, width: '100%', alignContent: 'center' }}>
     
       <DataGrid
-        rows={user}
+        rows={content}
         columns={columns}
         pageSize={5}
-        components={{Toolbar: GridToolbar }}
+        
         rowsPerPageOptions={[5]}
         checkboxSelection
       />
     </div>
-    </UserWrapper>
+    </PostWrapper>
 }
 

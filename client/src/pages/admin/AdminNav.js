@@ -3,10 +3,11 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { AdminSide } from './AdminSide';
-// import './adminNav.css';
+import './adminNav.css';
 import { IconContext } from 'react-icons';
 
 function AdminNav() {
+
   const [sidebar, setSidebar] = useState(true);
 
   // const showSidebar = () => setSidebar(!sidebar);
@@ -26,8 +27,8 @@ function AdminNav() {
                 <AiIcons.AiOutlineClose />
               </Link>
             </li>
-            
-            
+      
+          
             {AdminSide.map((item, index) => {
               return (
                 <li key={index} className={item.cName}>
