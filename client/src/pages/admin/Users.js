@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 
 import styled from 'styled-components';
-
+import { useHistory } from "react-router-dom"; 
 
 const UserWrapper = styled.div`
     width: 55%;
@@ -21,6 +21,9 @@ scrollbar-width: none;
 export default function Users() {
 
   const [user, setUser] = useState([]);
+  const history = useHistory();
+
+
   const fetchUsers = async () => {
     let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetch/getAllUsers", {
       // mode: 'no-cors',
@@ -60,6 +63,7 @@ const columns = [
         columns={columns}
         pageSize={5}
         components={{Toolbar: GridToolbar }}
+        
         rowsPerPageOptions={[5]}
         checkboxSelection
       />

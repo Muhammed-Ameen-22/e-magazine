@@ -30,8 +30,8 @@ export const createPost = async (req, res) => {
     const title = req.body.title;
     const desc = req.body.desc;
     const status = 'pending'
-    const user = 1;
-    const category = 2;
+    // const user = 1;
+    const category = req.body.category;
 
     console.log("Inside create post");
 

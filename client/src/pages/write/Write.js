@@ -1,7 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./write.css";
 import axios from "axios";
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import { Context } from "../../context/Context";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 export default function Write() {
   const [error, setError] = useState(false);
@@ -117,6 +124,7 @@ export default function Write() {
       //username: user.username,
       title,
       desc,
+      category
 
     };
     if (file) {
@@ -134,7 +142,13 @@ export default function Write() {
       const res = await axios.post(process.env.REACT_APP_SERVER_URL + "/create/createpost", newPost);
       console.log("status", res);
       if (res.status == "200") {
-        window.alert("Successfully submitted. Wait for admin approval !");
+        // return(
+        //   <Stack sx={{ width: '100%' }} spacing={2}>
+        // <Alert severity="info">Successfully submitted. Wait for admin approval !</Alert>
+        // </Stack>
+        // );
+       window.alert('Wait for admin approval');
+        
         window.location.replace("/");
       }
       else {
@@ -143,8 +157,18 @@ export default function Write() {
       //window.location.replace("/post/" + res.data._id);
     } catch (err) { }
   };
+
+  const [category, setCategory] = React.useState('');
+
+  const handleChange = (event) => {
+    setCategory(event.target.value);
+  };
+
   return (
     <div className="write">
+   
+
+  
       {file && (
         <img className="writeImg" src={file} alt="" />
       )}
@@ -166,6 +190,23 @@ export default function Write() {
             autoFocus={true}
             onChange={e => setTitle(e.target.value)}
           />
+           <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Category</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={category}
+        label="Age"
+        onChange={handleChange}
+      >
+        <MenuItem value={1}>Technical</MenuItem>
+        <MenuItem value={2}>Social</MenuItem>
+        <MenuItem value={3}>Geographical</MenuItem>
+      </Select>
+    </FormControl>
+  </Box>
+
         </div>
         <div className="writeFormGroup">
           <textarea

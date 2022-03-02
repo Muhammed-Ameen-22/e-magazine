@@ -265,3 +265,5 @@ app.get("/logout", (req, res) => {
 app.use('/create', posts);
 app.use('/fetch', posts);
 app.use('/fetchPost',posts)
+app.use('/eachPost',posts)
+app.use('/post',posts);
