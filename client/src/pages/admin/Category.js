@@ -68,7 +68,7 @@ console.log(desc);
   
   const [content, setContent] = useState([]);
   const fetchPosts = async () => {
-    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getAllPosts", {
+    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchCat/getAllCat", {
       // mode: 'no-cors',
         credentials: 'include',
     });

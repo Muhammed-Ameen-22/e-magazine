@@ -87,8 +87,8 @@ export const getEachPosts = async (req, res) => {
         })
         db.getConnection(async (err, connection) => {
             console.log('Reached eachPost')
-            
-        let qry = `SELECT * FROM tbl_content where content_id=${req.body.value};`;
+            console.log(req.body)
+        let qry = `SELECT * FROM tbl_content where content_id=${req.body.body.content_Id};`;
         try {
             db.query(qry, (err, data) => {
                 if (err) throw err;

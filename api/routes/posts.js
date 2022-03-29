@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { createPost } from '../controllers/posts.js';
+import { likePost,createPost } from '../controllers/posts.js';
 import { rejectPost,acceptPost,getApprovedPosts,getAllPosts, getAllUsers,getEachPosts } from '../controllers/admin.js';
 
 const router = express.Router();
@@ -12,4 +12,5 @@ router.get('/getApprovedPosts',getApprovedPosts)
 router.post('/getEachPosts',getEachPosts);
 router.post('/acceptPost',acceptPost);
 router.post('/rejectPost',rejectPost);
+router.post('/likePost',likePost);
 export default router;

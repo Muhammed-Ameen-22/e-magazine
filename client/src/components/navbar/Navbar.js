@@ -115,11 +115,11 @@ function Navbar() {
 
                 <li className='nav-item'>
                   <Link
-                    to='/Profile'
+                    to='/UserDash'
                     className='nav-links'
                     onClick={closeMobileMenu}
                   >
-                    Profile
+                    Posts
                   </Link>
                 </li>
               </>) :
@@ -129,7 +129,7 @@ function Navbar() {
 
                   <li className='nav-item'>
                     <Link
-                      to='/Write'
+                      to='/Login'
                       className='nav-links'
                       onClick={closeMobileMenu}
                     >

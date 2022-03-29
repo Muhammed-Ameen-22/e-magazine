@@ -90,6 +90,7 @@ app.post("/createUser", async (req, res) => {
     const cd = req.body.cd;
     const email = req.body.email;
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const status = 'Active'
     console.log(user);
     // console.log(cd);
     // console.log(email);
@@ -102,8 +103,8 @@ app.post("/createUser", async (req, res) => {
 
         const sqlSearch = "SELECT * FROM tbl_user WHERE user_Email = ?"
         const search_query = mysql.format(sqlSearch, [user])
-        const sqlInsert = "INSERT INTO tbl_user VALUES (0,?,?,?,?)"
-        const insert_query = mysql.format(sqlInsert, [user, cd, email, hashedPassword])
+        const sqlInsert = "INSERT INTO tbl_user VALUES (0,?,?,?,?,?)"
+        const insert_query = mysql.format(sqlInsert, [user, cd, email, hashedPassword,status])
         // ? will be replaced by values
         // ?? will be replaced by string
         await connection.query(search_query, async (err, result) => {
@@ -267,3 +268,4 @@ app.use('/fetch', posts);
 app.use('/fetchPost',posts)
 app.use('/eachPost',posts)
 app.use('/post',posts);
+app.use('/like',posts);
