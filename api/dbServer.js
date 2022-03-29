@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { dirname } from 'path';
 import posts from './routes/posts.js';
+import authRoutes from './routes/auth.js';
 import mysql from 'mysql';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
@@ -262,7 +263,11 @@ app.get("/logout", (req, res) => {
       res.end();
 });
 
+//auth
+app.use('/api',authRoutes);
 
+
+//posts
 app.use('/create', posts);
 app.use('/fetch', posts);
 app.use('/fetchPost',posts)
