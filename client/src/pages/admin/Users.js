@@ -43,15 +43,17 @@ export default function Users() {
     // console.log(status)
     setChecked(!checked);
   };
-
+const [id,setId]=useState('');
   const [open, setOpen] = useState(false);
-
+  var [status,setStatus]=useState('')
   const handleClickOpen = (e) => {
     
     console.log('e',e.row.user_Status)
     setStatus(e.row.user_Status)
- 
     console.log('Status',status)
+    console.log(e.row.id)
+    setId(e.row.id)
+   
     if(status=='Active')
     {
       setChecked(true)
@@ -62,14 +64,26 @@ export default function Users() {
     }
     setOpen(true);
   };
-  var[status,setStatus]=useState('');
+  
+  const[statuss,setStatuss]=useState('');
   const handleSubmit=async()=>{
+    // console.log("Handlesubmit")
+    // console.log("CHECKED",checked)
     setOpen(false);
+    console.log(checked)
+    if( checked ) 
+    setStatuss('Active')
+    else
+    setStatuss('Inactive')
+    
+    console.log('STATUS', statuss);
+    console.log('REason',reason)
     let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/status/changeStatus", {
       // mode: 'no-cors',
         credentials: 'include',
-        body:{user_Status:status}
+        body:{user_Status:statuss , user_remark:reason, user_Id:id}
     });
+    fetchUsers();
   }
   const handleClose = () => {
     setOpen(false);
@@ -78,7 +92,7 @@ export default function Users() {
   const [user, setUser] = useState([]);
   const history = useHistory();
 
-
+const [reason,setReason]=useState('HI');
   const fetchUsers = async () => {
     let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetch/getAllUsers", {
       // mode: 'no-cors',
@@ -153,7 +167,7 @@ const columns = [
             autoFocus
             margin="dense"
             id="name"
-            
+            onChange={(e)=>setReason(e.target.value)}
             type="email"
             fullWidth
             variant="standard"

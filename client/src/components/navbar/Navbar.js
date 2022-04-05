@@ -7,12 +7,15 @@ import axios from "axios";
 function Navbar() {
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userName, setUserName] = useState(true)
+  const [userName, setUserName] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     setLoggedIn(localStorage.getItem("loggedIn"))
+    setIsAdmin(localStorage.getItem("isAdmin"))
     setUserName(localStorage.getItem('userName'))
-  }, [localStorage.getItem("loggedIn")], [localStorage.getItem("userName")])
+    
+  }, [localStorage.getItem("loggedIn")],[localStorage.getItem("isAdmin")], [localStorage.getItem("userName")])
 
   // const loggedIn=false;
 
@@ -52,10 +55,13 @@ function Navbar() {
       console.log("HI");
       localStorage.removeItem(loggedIn);
       localStorage.loggedIn = false;
+      localStorage.isAdmin = false;
+      setIsAdmin(false);
+
       console.log(localStorage.loggedIn);
       setLoggedIn(false);
-
-      const res = await axios.get(process.env.REACT_APP_SERVER_URL + "/logout");
+ 
+      const res = await axios.get(process.env.REACT_APP_SERVER_URL + "/api/logout");
       console.log("RES" + res);
       res.data && window.location.replace("/");
     }
@@ -63,7 +69,7 @@ function Navbar() {
       //  setError(true);
     }
   };
-
+  console.log(isAdmin);
   window.addEventListener('resize', showButton);
 
   return (
@@ -78,90 +84,133 @@ function Navbar() {
             <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
-              <Link
-                to='/'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                Home  {userName}
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link
-                to='/'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
-                About Us
-              </Link>
-            </li>
-            <>
-
-            </>
+          
 
 
-            {loggedIn ? (
-              <>
+            {isAdmin  &&
+              (<>
                 <li className='nav-item'>
                   <Link
-                    to='/Write'
+                    to='/Users'
                     className='nav-links'
                     onClick={closeMobileMenu}
                   >
-                    Write
+                    Users
                   </Link>
                 </li>
 
                 <li className='nav-item'>
                   <Link
-                    to='/UserDash'
+                    to='/post-view-admin'
                     className='nav-links'
                     onClick={closeMobileMenu}
                   >
                     Posts
                   </Link>
                 </li>
-              </>) :
+              
+              
+              </>)
+            } 
 
-              (
+              {(isAdmin == false || isAdmin == null) &&
                 <>
-
-                  <li className='nav-item'>
-                    <Link
-                      to='/Login'
-                      className='nav-links'
-                      onClick={closeMobileMenu}
-                    >
-                      Posts
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to='/Login'
-                      className='nav-links-mobile'
-                      onClick={closeMobileMenu}
-                    >
-                      Sign Up
-                    </Link>
-                  </li>
-
+                <li className='nav-item'>
+                  <Link
+                    to='/'
+                    className='nav-links'
+                    onClick={closeMobileMenu}
+                  >
+                    Home  {userName}
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    to='/'
+                    className='nav-links'
+                    onClick={closeMobileMenu}
+                  >
+                    About Us
+                  </Link>
+                </li>
+                
+    
                 </>
+}
+                  
+                { !isAdmin && loggedIn ? (
+                  <>
+                    <li className='nav-item'>
+                      <Link
+                        to='/Write'
+                        className='nav-links'
+                        onClick={closeMobileMenu}
+                      >
+                        Write
+                      </Link>
+                    </li>
+    
+                    <li className='nav-item'>
+                      <Link
+                        to='/UserDash'
+                        className='nav-links'
+                        onClick={closeMobileMenu}
+                      >
+                        Posts
+                      </Link>
+                    </li>
+                  </>) :
+    
+                  ( !isAdmin &&
+                    <>
+    
+                      <li className='nav-item'>
+                        <Link
+                          to='/Login'
+                          className='nav-links'
+                          onClick={closeMobileMenu}
+                        >
+                          Posts
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to='/Login'
+                          className='nav-links-mobile'
+                          onClick={closeMobileMenu}
+                        >
+                          Sign Up
+                        </Link>
+                      </li>
+    
+                    </>
+    
+                  )
+                }
 
-              )
-            }
+              
+            
           </ul>
-          {loggedIn ? (
+
+         
+
+          {(loggedIn || isAdmin) &&  (
             <>
               {button && <Button onClick={handlelogout} buttonStyle='btn--outline' >LOGOUT</Button>}
 
             </>
-          ) : (
+          )} 
+          
+          
+          {!loggedIn && (
             <>
               {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>}
 
             </>
           )}
+
+
+
         </div>
       </nav>
     </>

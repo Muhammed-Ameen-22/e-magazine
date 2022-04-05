@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 
 
-function Login() {
+function AdminLogin() {
 
   axios.defaults.withCredentials = true;
 
@@ -43,12 +43,7 @@ function Login() {
     }).then((response) => {
       if (response.data.message) {
         setLoginStatus(response.data.message);
-      }else if (response.data.isadmin === true){
-        localStorage.setItem("isAdmin",true);
-        history.push("/AdminDash");
-      } 
-      
-      else {
+      } else {
         localStorage.setItem("loggedIn",true);
         // setLoginStatus(response.data[0].user_Email);
         history.push("/Write")

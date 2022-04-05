@@ -25,6 +25,8 @@ export const createPost = async (req, res) => {
     })
 
 
+    const date = new Date().toISOString().slice(0,10);
+    // console.log("Date",datetime)
 
     const file = req.body.file;
     const title = req.body.title;
@@ -42,12 +44,12 @@ export const createPost = async (req, res) => {
     console.log(desc);
     console.log(file);
 
-    const user_id = req.session.user_identity;
-    console.log("session is this",req.session.user_identity);
+    const user_id = req.user.user_identity;
+    console.log("session is this",req.user.user_identity);
     console.log('session is this', user_id)
 
-    const sqlInsert = "INSERT INTO tbl_content VALUES (0,?,?,?,?,?,?,?)"
-    const insert_query = mysql.format(sqlInsert, [user_id,category,file,desc, status, title,likes])
+    const sqlInsert = "INSERT INTO tbl_content VALUES (0,?,?,?,?,?,?,?,?)"
+    const insert_query = mysql.format(sqlInsert, [user_id,category,file,desc, status, title,likes,date])
     // ? will be replaced by values
     // ?? will be replaced by string
     db.getConnection(async (err, connection) => {
@@ -95,14 +97,14 @@ export const likePost = async (req, res) => {
 
    
 
-    console.log("Inside create post");
+    console.log("Inside Like post");
 
-    console.log("Hi");
+    console.log("Liking the post");
 console.log(req.body)
    const postId=req.body.body.content_Id;
-
-    const user_id = req.session.user_identity;
-    console.log("session is this",req.session.user_identity);
+console.log("IDENTITY",req.user.user_identity)
+    const user_id = req.user.user_identity;
+    console.log("session is this",req.user.user_identity);
     console.log('session is this', user_id)
 
     const sqlCheck="Select like_ID from tbl_likes where user_ID= '?' and content_Id= '?' "

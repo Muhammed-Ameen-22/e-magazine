@@ -119,6 +119,8 @@ export default function Write() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // console.log(res.cookie);
     const newPost = {
       file,
       //username: user.username,
@@ -190,22 +192,22 @@ export default function Write() {
             autoFocus={true}
             onChange={e => setTitle(e.target.value)}
           />
-           <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Category</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={category}
-        label="Age"
-        onChange={handleChange}
-      >
-        <MenuItem value={1}>Technical</MenuItem>
-        <MenuItem value={2}>Social</MenuItem>
-        <MenuItem value={3}>Geographical</MenuItem>
-      </Select>
-    </FormControl>
-  </Box>
+            <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Category</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={category}
+          label="Age"
+          onChange={handleChange}
+        >
+          <MenuItem value={1}>Technical</MenuItem>
+          <MenuItem value={2}>Social</MenuItem>
+          <MenuItem value={3}>Geographical</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
 
         </div>
         <div className="writeFormGroup">

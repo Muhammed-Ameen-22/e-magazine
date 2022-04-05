@@ -23,7 +23,11 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -38,7 +42,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 export default function Cards() {
-  
+ 
 const[opens,setOpens]=React.useState(false);
   const [open, setOpen] = React.useState(false);
 const[image,setImage]=useState('')
@@ -46,7 +50,38 @@ const[title,setTitle]=useState('')
 const[desc,setDesc]=useState('')
 var[likes,setLikes]=useState('')
 var [postId, setId] = useState('');
+const[cat,setCat]=useState('');
+const [post,setPost]=useState('');
 
+
+
+// const [error, setError] = useState(null);
+// const [isLoaded, setIsLoaded] = useState(false);
+// const [items, setItems] = useState([]);
+// const [q, setQ] = useState("");
+// const [searchParam] = useState(["capital", "name", "numericCode"]);
+// const [filterParam, setFilterParam] = useState(["All"]); 
+
+
+
+
+
+const [category, setCategory] = useState('');
+// const handleChange = async(event) =>{
+
+//   console.log('Value',event.target.value);
+//   setCategory(event.target.value);
+//   console.log('HandleChange',category)
+
+// let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/filterPost/getFilterPosts", {
+//   headers: { Accept: 'application/json', "Content-Type": "application/json", },
+//   credentials: 'include',
+//   body:{'category':event.target.value}
+// })
+//  console.log('RES',res);
+//   {content.map(renderCard)}
+
+// };
 
   const handleClickOpen = async(id) => {
 
@@ -62,6 +97,7 @@ setId(id);
     // setTitle(res.data[0].content_Category)
 setTitle(res.data[0].content_Title)
 setLikes(res.data[0].content_Likes)
+setCat(res.data[0].cat_Name);
     setPost(res.data)
     
     
@@ -69,7 +105,7 @@ setLikes(res.data[0].content_Likes)
 
 
     console.log('res in eachPost',res.data)
-    console.log('EachPost',post)
+    console.log('EachPost',posts)
     // post.map(function(cValue,idx){
     //   console.log("currentValue.id:",cValue.content_Title);
     // })
@@ -95,6 +131,9 @@ const handleClose = () => {
     console.log('Res',res)
     if(res.data=='Already Liked')
     {
+      // console.log('user',user);
+      // var datetime = new Date();
+      // console.log("Date",datetime)
       setAlert(true);
       setOpens(true)
       
@@ -118,6 +157,9 @@ const handleClose = () => {
       credentials: 'include',
     });
     res = await res.json();
+    // (result) => {
+    //   setIsLoaded(true);
+    //   setItems(result);
     console.log("this is res in fetchPosts", res);
     res = res.map(({ content_Id: id, ...rest }) => ({ id, ...rest }));
 
@@ -135,7 +177,8 @@ const handleClose = () => {
     // console.log('res', res) 
     
     setContent(res)
-    console.log(content)
+    // console.log(res)
+    // console.log('content',posts.cat_Name)
   };
   
   useEffect(() => {
@@ -148,7 +191,7 @@ const handleClose = () => {
     console.log("This is id ",id)
   }
 
-const[post,setPost]=useState([])
+// const[post,setPost]=useState([])
   const handleClick=
   async (id) => {
     console.log('Handle Clicked',id)
@@ -190,11 +233,13 @@ const handleCloseSnack = (event, reason) => {
 
 
   const renderCard = (card, index) => {
-
-
+    // console.log("POSTS",content[0].cat_Name);
+    console.log("Category", category)
+   
     // let dataBuffer = new Buffer(card.content_Image);
     // let mediaType = 'PNG';
-
+    // console.log('category',category);
+    // console.log('category',cat);
     return (
 
 <>
@@ -207,7 +252,7 @@ const handleCloseSnack = (event, reason) => {
           src={card.content_Image}
           id={card.id}
             text={card.content_Title}
-          label=''
+          label={card.cat_Name}
           path='/UserDash'
           
          
@@ -271,6 +316,7 @@ const handleCloseSnack = (event, reason) => {
 
 
     );
+          
 
   };
 
@@ -284,10 +330,46 @@ const handleCloseSnack = (event, reason) => {
   // </Card>
 
 
-  return <div className="grid" 
-  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    {content.map(renderCard)}</div>;
+//   const [posts, setposts] = useState([]);
 
+//   const [selectedCategory, setSelectedCategory] = useState();
+  
+//   function getFilteredList() {
+//     if (!selectedCategory) {
+//       return posts;
+//     }
+//     return posts.filter((item) => item.category === selectedCategory);
+//   }
+
+
+//   var filteredList = useMemo(getFilteredList, [selectedCategory, posts]);
+
+
+  return <>
+  <div style={{ margin: '40px 200px 5px ' ,width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Category</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={category}
+        label="Age"
+        onChange={(e)=>setCategory(e.target.value)}
+      >
+        <MenuItem value={1}>Technical</MenuItem>
+        <MenuItem value={2}>Social</MenuItem>
+        <MenuItem value={3}>Geographical</MenuItem>
+      </Select>
+    </FormControl>
+  </Box>
+  </div>
+  <div className="grid" 
+  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+     {content.map(renderCard)}
+    {/* {filteredList.content.map(renderCard)} */}
+    </div>;
+    </>
 
 
   // var[title,getTitle]=useState([])
@@ -347,7 +429,8 @@ const handleCloseSnack = (event, reason) => {
   //   </div>
 
   // );
-
 };
+  
+// };
 
 

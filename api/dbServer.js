@@ -181,7 +181,7 @@ app.listen(SERVER_PORT,
 
 app.get("/loginUser", (req, res) => {
     if (req.session.user) {
-        res.send({ loggedIn: true, user: req.session.user });
+        res.send({ loggedIn: "true", user: req.session.user });
         //   console.log('IN POST LOGIN')
     } else {
         res.send({ loggedIn: false });
@@ -189,68 +189,8 @@ app.get("/loginUser", (req, res) => {
 });
 
 
-//   const token = jwt.sign({ username, user_type, name }, process.env.JWT_SECRET, {
-//     expiresIn: '25 days',
-//   });
 
-//   res.cookie('token', token, {
-//     httpOnly: true,
-//     maxAge: 2160000000,
-//     secure: process.env.ENV == 'production' ? true : false,
-//   });
 
-app.post("/loginUser", (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    db.query(
-        "Select * from tbl_user where user_Email = ?;",
-        email,
-        (err, result) => {
-            if (err) {
-                res.send({ err: err });
-            }
-
-            if (result.length > 0) {
-                bcrypt.compare(password, result[0].user_Pass, (error, response) => {
-                    if (response) {
-                        // req.session.user({ attributes: ['id', 'name', 'cd', 'email'] }) = result;
-                        req.session.user=result[0].user_Name;
-             
-                        
-                        //req.session.userId = result[0].user_ID;
-                        var session=req.session;
-                        session.username=result[0].user_Name;
-                        session.user_identity = result[0].user_ID;
-
-                        // console.log(session);
-                        
-                        console.log("This is session",req.session);
-                        // console.log(req.session.user.name);
-                        // return res.json({
-                        //     error: false,
-                        //     user: {
-                        //         username,
-                        //         user_type,
-                        //         haschangedpass,
-                        //         name,
-                        //         isLoggedIn: true,
-                        //     },
-                        // });
-                        //   console.log('Hello')
-                        //   console.log(result)
-                        res.send(result);
-                        //   console.log(req.session.user[0].user_Email)
-                    } else {
-                        res.send({ message: "Wrong username/password combination!" });
-                    }
-                });
-            } else {
-                res.send({ message: "User doesn't exist" });
-            }
-        }
-    );
-});
 
 
 app.get("/logout", (req, res) => {
@@ -274,3 +214,4 @@ app.use('/fetchPost',posts)
 app.use('/eachPost',posts)
 app.use('/post',posts);
 app.use('/like',posts);
+app.use('/status',posts);
