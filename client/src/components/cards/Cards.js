@@ -154,6 +154,7 @@ const handleClose = () => {
   const fetchPosts = async () => {
     let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getApprovedPosts", {
       // mode: 'no-cors',
+      withCredntials: true,
       credentials: 'include',
     });
     res = await res.json();
@@ -321,33 +322,11 @@ const handleCloseSnack = (event, reason) => {
   };
 
 
-  // <Card style={{ width: "18rem" }} key={index} className="box">
-  //   {/* <Card.Img variant="top" src="holder.js/100px180" src={card.image} /> */}
-  //   <Card.Body>
-  //     <Card.Title>{card.content_Title}</Card.Title>
-  //     <Card.Text>{card.content}</Card.Text>
-  //   </Card.Body>
-  // </Card>
-
-
-//   const [posts, setposts] = useState([]);
-
-//   const [selectedCategory, setSelectedCategory] = useState();
-  
-//   function getFilteredList() {
-//     if (!selectedCategory) {
-//       return posts;
-//     }
-//     return posts.filter((item) => item.category === selectedCategory);
-//   }
-
-
-//   var filteredList = useMemo(getFilteredList, [selectedCategory, posts]);
 
 
   return <>
-  <div style={{ margin: '40px 200px 5px ' ,width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
+  {/* <div style={{ margin: '40px 200px 5px ' ,width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> */}
+  {/* <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
     <FormControl fullWidth>
       <InputLabel id="demo-simple-select-label">Category</InputLabel>
       <Select
@@ -362,8 +341,8 @@ const handleCloseSnack = (event, reason) => {
         <MenuItem value={3}>Geographical</MenuItem>
       </Select>
     </FormControl>
-  </Box>
-  </div>
+  </Box> */}
+  {/* </div> */}
   <div className="grid" 
   style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
      {content.map(renderCard)}
@@ -371,66 +350,8 @@ const handleCloseSnack = (event, reason) => {
     </div>;
     </>
 
-
-  // var[title,getTitle]=useState([])
-
-  // for(var i=0;i<10;i++)
-  // {
-  //   getTitle(posts[i].content);
-  //   console.log('title',title)
-  // }
-
-
-
-  // return (
-  //   <div className="grid">{posts.map(renderCard)}</div>);
-
-  //   <div className='cards'>
-  //     <h1>Check out these new posts!</h1>
-  //     <div className='cards__container'>
-  //       <div className='cards__wrapper'>
-  //         <ul className='cards__items'>
-  //           <CardItem
-  //             src='images/img-9.jpg'
-  //             text={title}
-  //             label='Adventure'
-
-  //             path='/services'
-  //           />
-  //           <CardItem
-  //             src='images/img-2.jpg'
-  //             text={title}
-  //             label='Luxury'
-  //             path='/services'
-  //           />
-  //         </ul>
-  //         <ul className='cards__items'>
-  //           <CardItem
-  //             src='images/img-3.jpg'
-  //             text={title}
-  //             label='Mystery'
-  //             path='/services'
-  //           />
-  //           <CardItem
-  //             src='images/img-4.jpg'
-  //             text='Experience Football on Top of the Himilayan Mountains'
-  //             label='Adventure'
-  //             path='/products'
-  //           />
-  //           <CardItem
-  //             src='images/img-8.jpg'
-  //             text='Ride through the Sahara Desert on a guided camel tour'
-  //             label='Adrenaline'
-  //             path='/sign-up'
-  //           />
-  //         </ul>
-  //       </div>
-  //     </div>
-  //   </div>
-
-  // );
 };
   
-// };
+
 
 

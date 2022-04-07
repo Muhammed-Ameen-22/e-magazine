@@ -47,14 +47,17 @@ const [id,setId]=useState('');
   const [open, setOpen] = useState(false);
   var [status,setStatus]=useState('')
   const handleClickOpen = (e) => {
+    console.log(e);
+
     
-    console.log('e',e.row.user_Status)
+    // console.log('e',e.row.user_Status)
     setStatus(e.row.user_Status)
     console.log('Status',status)
-    console.log(e.row.id)
+    // console.log(e.row.id)
     setId(e.row.id)
+    console.log('This is id ', id)
    
-    if(status=='Active')
+    if(status==='Active')
     {
       setChecked(true)
     }
@@ -138,10 +141,10 @@ const columns = [
         columns={columns}
         pageSize={5}
         components={{Toolbar: GridToolbar }}
-        
+        onCellDoubleClick={handleClickOpen}
         rowsPerPageOptions={[5]}
         checkboxSelection
-        onCellDoubleClick={handleClickOpen}
+       
       />
       
 </div>

@@ -11,14 +11,14 @@ function HeroSection() {
       <p>What are you waiting for?</p> */}
        
       <div className='hero-btns'>
-        <Button
+        {/* <Button
           className='btns'
           buttonStyle='btn--outline'
           buttonSize='btn--large'
           onClick={'/login'}
         >
           SIGN IN
-        </Button>
+        </Button> */}
         {/* <Button
           className='btns'
           buttonStyle='btn--outline'

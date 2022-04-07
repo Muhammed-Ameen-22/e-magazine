@@ -64,7 +64,7 @@ export const login = (req, res) => {
 
                             console.log("This is token", token);
                             res.cookie('token', token, {
-                                httpOnly: true,
+                                httpOnly: false,
                                 maxAge: 2160000000,
                                 secure: process.env.ENV == 'production' ? true : false,
                             });
@@ -102,7 +102,7 @@ export const logout = (req, res) => {
     res.clearCookie("token");
     console.log("Successfully logged out");
     req.session.destroy((err) => {
-        //res.redirect('/') 
+        // res.redirect('/') 
     })
 
     res.end();

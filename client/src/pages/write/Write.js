@@ -151,7 +151,7 @@ export default function Write() {
         // );
        window.alert('Wait for admin approval');
         
-        window.location.replace("/");
+        window.location.replace("/write");
       }
       else {
         window.alert("ERROR! Something went wrong. Please try again");

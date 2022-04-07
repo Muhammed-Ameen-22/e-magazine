@@ -36,7 +36,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Postview() {
+export default function Contest() {
 
 const[id,setId]=useState('');
 

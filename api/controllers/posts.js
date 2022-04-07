@@ -57,12 +57,12 @@ export const createPost = async (req, res) => {
             if (err) throw (err)
 
             else {
-                await connection.query(insert_query, (err, result) => {
+                
                     connection.release()
-                    if (err) throw (err)
+            
 
                     res.sendStatus(200);
-                })
+                
             }
         }) //end of connection.query()
     });
@@ -100,7 +100,7 @@ export const likePost = async (req, res) => {
     console.log("Inside Like post");
 
     console.log("Liking the post");
-console.log(req.body)
+// console.log(req.body)
    const postId=req.body.body.content_Id;
 console.log("IDENTITY",req.user.user_identity)
     const user_id = req.user.user_identity;
@@ -166,4 +166,61 @@ console.log("IDENTITY",req.user.user_identity)
         // }) //end of connection.query()
     });
 };
-3
+
+
+
+export const getUserPosts = async (req, res) => {
+
+
+    const DB_HOST = process.env.DB_HOST
+
+    const DB_USER = process.env.DB_USER
+    const DB_PASSWORD = process.env.DB_PASSWORD
+    const DB_DATABASE = process.env.DB_DATABASE
+    const DB_PORT = process.env.DB_PORT
+
+    const db = mysql.createPool({
+
+        host: DB_HOST,
+        user: DB_USER,
+        password: DB_PASSWORD,
+        database: DB_DATABASE,
+        port: DB_PORT
+    })
+
+
+
+   
+
+    console.log("Inside GETUSERpost");
+
+// console.log(req.body)
+//    const postId=req.body.body.content_Id;
+console.log("IDENTITY",req.user.user_identity)
+    const user_id = req.user.user_identity;
+    // console.log("session is this",req.user.user_identity);
+    console.log('session is this', user_id)
+
+    const sqlGet="Select * from tbl_content where user_id = '?'"
+    const get_query = mysql.format(sqlGet,[user_id])
+    // const sqlInsertlike="UPDATE tbl_content set content_Likes= content_Likes+1 where content_Id='?'"
+    // const insert_likes=mysql.format(sqlInsertlike,[postId])
+    // const sqlInsert = "INSERT INTO tbl_likes VALUES (0,?,?)"
+    // const insert_query = mysql.format(sqlInsert, [user_id,postId])
+    // console.log('Check query',check_query)
+    // ? will be replaced by values
+    // ?? will be replaced by string
+    db.getConnection(async (err, connection) => {
+        
+            try {
+                db.query(get_query, (err, data) => {
+                    if (err) throw err;
+        
+                    return res.status(200).json(data);
+                });
+            } catch (error) {
+                console.error(error);
+                return res.status(500).send('internal server error');
+            }
+    });
+};

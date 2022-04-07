@@ -68,6 +68,7 @@ function Login() {
       // console.log(userName)
       if (response.data.loggedIn == true) {
         localStorage.setItem("loggedIn",true);
+        document.cookie("isLoggedIn",true);
         history.push("/Write")
         // setLoginStatus(response.data.user[0].user_Email);
        
@@ -126,10 +127,19 @@ function Login() {
         email,
         password
         
-      });
+      }).then((response) => {
+        if (response.data.message) {
+          setLoginStatus(response.data.message);
+          console.log('response',response.data.message)
+        }
+        
+        else
+        {
       console.log("RES"+res);
       res.data && window.location.replace("/login");
-    }
+        }
+    })
+  }
      catch (err) {
       setError(true);
     }
@@ -174,9 +184,11 @@ function Login() {
           </Components.Select>
             )}
           {/* <Components.Input type="text" placeholder="Course/Department" /> */}
-          <Components.Input type="email" placeholder="Email" name="email" onChange={(e) => setEmail(e.target.value)}/>
+          <Components.Input type="email"  placeholder="Email" name="email" onChange={(e) => setEmail(e.target.value)}/>
           <Components.Input type="password" placeholder="Password" name="password" onChange={(e) => setPassword(e.target.value)}/>
           <Components.Button onClick={handleSignUp}>Sign Up</Components.Button>
+          
+          <h5>{loginStatus}</h5>
         </Components.Form>
       </Components.SignUpContainer>
       <Components.SignInContainer signingIn={signIn} >

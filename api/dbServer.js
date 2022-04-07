@@ -103,7 +103,7 @@ app.post("/createUser", async (req, res) => {
         if (err) throw (err)
 
         const sqlSearch = "SELECT * FROM tbl_user WHERE user_Email = ?"
-        const search_query = mysql.format(sqlSearch, [user])
+        const search_query = mysql.format(sqlSearch, [email])
         const sqlInsert = "INSERT INTO tbl_user VALUES (0,?,?,?,?,?)"
         const insert_query = mysql.format(sqlInsert, [user, cd, email, hashedPassword,status])
         // ? will be replaced by values
@@ -115,7 +115,9 @@ app.post("/createUser", async (req, res) => {
             if (result.length != 0) {
                 connection.release()
                 console.log("------> User already exists")
-                res.sendStatus(409)
+                res.send({ message: "Email already exists!" });
+                // res.sendStatus(409)
+                
             }
             else {
                 await connection.query(insert_query, (err, result) => {

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { isLoggedIn }  from '../middlewares/isLoggedIn.js';
-import { likePost,createPost } from '../controllers/posts.js';
+import { getUserPosts,likePost,createPost } from '../controllers/posts.js';
 import { changeStatus,rejectPost,acceptPost,getApprovedPosts,getAllPosts, getAllUsers,getEachPosts } from '../controllers/admin.js';
 
 const router = express.Router();
@@ -13,6 +13,7 @@ router.get('/getApprovedPosts',getApprovedPosts)
 router.post('/getEachPosts',getEachPosts);
 router.post('/acceptPost',acceptPost);
 router.post('/rejectPost',rejectPost);
-router.post('/likePost',  likePost);
+router.post('/likePost',  isLoggedIn,likePost);
 router.post('/changeStatus',changeStatus);
+router.get('/getUserPosts', isLoggedIn,getUserPosts);
 export default router;

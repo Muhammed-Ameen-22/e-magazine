@@ -8,11 +8,14 @@ import Write from './pages/write/Write';
 import Login from './pages/login/Login';
 
 import AdminDash from './pages/admin/AdminDash';
-
+import Contest from './pages/admin/Contest'
 import UserDash from './pages/user/UserDash';
 import PostView from './pages/user/PostView'
 import Users from './pages/admin/Users';
 import Postview from './pages/admin/Postview';
+import UserWorks from './pages/user/UserWorks';
+import { ContentPasteGo } from '@mui/icons-material';
+
 
 function App() {
 
@@ -28,10 +31,22 @@ function App() {
   //   setIsAdmin(false);
   // }
 
+  const [loggedIn, setLoggedIn] = useState(
+    // initial value
+    // document.cookie.split(';').some((item) => item.trim().startsWith('token=')));
+    localStorage.getItem("loggedIn"));
+
+  const [isAdmin, setIsAdmin] = useState(
+    localStorage.getItem("isAdmin"));
+  
+    
+    console.log("cookie",localStorage.getItem("loggedIn"));
+    console.log("val of logged in",loggedIn);
+
   return (
     <>
       <Router>
-        <Navbar />
+        <Navbar  {...{loggedIn,isAdmin}} />
         
         <Switch>
        
@@ -49,11 +64,11 @@ function App() {
           {/* <Route path='/AdminLogin' component ={AdminLogin} /> */}
 
           <Route path='/AdminDash' component={AdminDash} /> 
-
+          <Route path='/Contest' component={Contest} />
 
           <Route path='/Users' exact component={Users} />
           <Route path='/post-view-admin' component={Postview} />
-
+          <Route path='/UserWorks' component={UserWorks}/>
 
         </Switch>
       </Router>

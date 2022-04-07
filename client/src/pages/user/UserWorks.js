@@ -13,8 +13,6 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import axios from 'axios';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 
 // import imageDataURI from 'image-data-uri';
 
@@ -38,23 +36,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+export default function UserWorks() {
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-
-export default function Postview() {
-
-  const[opens,setOpens]=React.useState(false);
-
-  const handleCloseSnack = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-  
-    setOpens(false);
-  };
 const[id,setId]=useState('');
 
   const [open, setOpen] = React.useState(false);
@@ -85,7 +68,7 @@ console.log(desc);
   
   const [content, setContent] = useState([]);
   const fetchPosts = async () => {
-    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getAllPosts", {
+    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getUserPosts", {
       // mode: 'no-cors',
         credentials: 'include',
     });
@@ -105,33 +88,29 @@ useEffect(() => {
 }, []);
 
 
-const handleAccept = async () => {
-  // console.log("ID ACCEPTED",id)
+// const handleAccept = async () => {
+//   // console.log("ID ACCEPTED",id)
 
-  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/acceptPost", {
-      method: "POST",
-      headers: { Accept: 'application/json', "Content-Type": "application/json", },
-      credentials: 'include',
-      body:{'content_Id':id}
-  });
-  setStatus('accepted');
-  setOpens(true);
-  fetchPosts();
-}
-var [status,setStatus]=useState('')
-const handleReject = async () => {
-  // console.log("ID ACCEPTED",{id})
+//   let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/acceptPost", {
+//       method: "POST",
+//       headers: { Accept: 'application/json', "Content-Type": "application/json", },
+//       credentials: 'include',
+//       body:{'content_Id':id}
+//   });
+//   fetchPosts();
+// }
 
-  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/rejectPost", {
-      method: "POST",
-      headers: { Accept: 'application/json', "Content-Type": "application/json", },
-      credentials: 'include',
-      body:{'content_Id':id}
-  });
-  setStatus('rejected');
-  setOpens(true);
-  fetchPosts();
-}
+// const handleReject = async () => {
+//   // console.log("ID ACCEPTED",{id})
+
+//   let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/rejectPost", {
+//       method: "POST",
+//       headers: { Accept: 'application/json', "Content-Type": "application/json", },
+//       credentials: 'include',
+//       body:{'content_Id':id}
+//   });
+//   fetchPosts();
+// }
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 50 },
@@ -168,7 +147,7 @@ const[image,setImage]=useState('')
         rows={content}
         columns={columns}
         pageSize={5}
-        components={{Toolbar: GridToolbar }}
+        // components={{Toolbar: GridToolbar }}
         onCellDoubleClick={handleClickOpen}
         rowsPerPageOptions={[5]}
         checkboxSelection
@@ -203,12 +182,12 @@ const[image,setImage]=useState('')
             {/* <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Sound
             </Typography> */}
-            <Button autoFocus color="inherit" onClick={handleAccept}>
+            {/* <Button autoFocus color="inherit" onClick={handleAccept}>
               Accept
             </Button>
             <Button autoFocus color="inherit" onClick={handleReject}>
               Reject
-            </Button>
+            </Button> */}
           </Toolbar>
         </AppBar>
         <h1>{title}</h1>
@@ -227,9 +206,6 @@ const[image,setImage]=useState('')
             />
           </ListItem>
         </List> */}
-         <Snackbar open={opens} autoHideDuration={6000} onClose={handleCloseSnack}>
-         {alert?  <Alert onClose={handleCloseSnack} severity="info">You have {status} the post!</Alert>: <></> }
-         </Snackbar>
       </Dialog>
     </div>
 
