@@ -58,6 +58,7 @@ function Navbar(props) {
       localStorage.isAdmin = false;
       setIsAdmin(false);
       setLoggedIn(false);
+      sessionStorage.removeItem('Refreshed');
 
       const res = await axios.get(process.env.REACT_APP_SERVER_URL + "/api/logout");
       // console.log("RES" + res);
@@ -138,6 +139,24 @@ function Navbar(props) {
                     Posts
                   </Link>
                 </li>
+                <li className='nav-item'>
+                  <Link
+                    to='/UserContest'
+                    className='nav-links'
+                    onClick={closeMobileMenu}
+                  >
+                    Contest
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link
+                    to='/UserWorks'
+                    className='nav-links'
+                    onClick={closeMobileMenu}
+                  >
+                    My Works
+                  </Link>
+                </li>
               </>
 
 
@@ -202,6 +221,15 @@ function Navbar(props) {
                     </Link>
                   </li>
 
+                  <li className='nav-item'>
+                    <Link
+                      to='/Contest'
+                      className='nav-links'
+                      onClick={closeMobileMenu}
+                    >
+                      Contest
+                    </Link>
+                  </li>
 
                 </>
               
@@ -227,7 +255,7 @@ function Navbar(props) {
     );
   }
 
-  else if( (props.loggedIn == "false") && (props.isAdmin == "false")) {
+  else if((props.loggedIn == "false" || props.loggedIn == null) && (props.isAdmin == "false" || props.isAdmin == null) ) {
     console.log("Rendering logged out")
     return (
       <>

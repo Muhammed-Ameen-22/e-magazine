@@ -23,8 +23,8 @@ export const AdminSide = [
     cName: 'nav-text'
   },
   {
-    title: 'Category',
-    path: '/Category',
+    title: 'Contest',
+    path: '/Contest',
     icon: <IoIcons.IoMdPeople />,
     cName: 'nav-text'
   }

@@ -2,7 +2,7 @@ import express from 'express';
 
 import { isLoggedIn }  from '../middlewares/isLoggedIn.js';
 import { getUserPosts,likePost,createPost } from '../controllers/posts.js';
-import { changeStatus,rejectPost,acceptPost,getApprovedPosts,getAllPosts, getAllUsers,getEachPosts } from '../controllers/admin.js';
+import { createContest,changeStatus,rejectPost,acceptPost, getAllContest,getApprovedPosts,getAllPosts, getAllUsers,getEachPosts } from '../controllers/admin.js';
 
 const router = express.Router();
 
@@ -15,5 +15,9 @@ router.post('/acceptPost',acceptPost);
 router.post('/rejectPost',rejectPost);
 router.post('/likePost',  isLoggedIn,likePost);
 router.post('/changeStatus',changeStatus);
+router.post('/createContest',createContest);
 router.get('/getUserPosts', isLoggedIn,getUserPosts);
+router.get('/getAllContest', getAllContest);
+
+
 export default router;

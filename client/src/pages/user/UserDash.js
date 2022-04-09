@@ -125,6 +125,8 @@ const handleClose = () => {
     // console.log('Like id',id)
     let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/like/likePost", {
       // mode: 'no-cors',
+            method: "POST",
+      headers: { Accept: 'application/json', "Content-Type": "application/json", },
       credentials: 'include',
       body:{'content_Id':postId}
     });

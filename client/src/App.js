@@ -15,6 +15,7 @@ import Users from './pages/admin/Users';
 import Postview from './pages/admin/Postview';
 import UserWorks from './pages/user/UserWorks';
 import { ContentPasteGo } from '@mui/icons-material';
+import UserContest from './pages/user/UserContest'
 
 
 function App() {
@@ -55,7 +56,7 @@ function App() {
           <Route path='/PostView' component={PostView}/>
           <Route path='/UserDash' component={UserDash}/>
           
-          
+          <Route path='/UserContest' component={UserContest}/>
           {/* {this.isAdmin && <Route path='/services' component={Services} /> }  */}
       
           

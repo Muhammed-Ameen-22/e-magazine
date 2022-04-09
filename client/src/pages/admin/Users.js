@@ -49,7 +49,7 @@ const [id,setId]=useState('');
   const handleClickOpen = (e) => {
     console.log(e);
 
-    
+
     // console.log('e',e.row.user_Status)
     setStatus(e.row.user_Status)
     console.log('Status',status)
@@ -57,7 +57,7 @@ const [id,setId]=useState('');
     setId(e.row.id)
     console.log('This is id ', id)
    
-    if(status==='Active')
+    if(e.row.user_Status==='Active')
     {
       setChecked(true)
     }

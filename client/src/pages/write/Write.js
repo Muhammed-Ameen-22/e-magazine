@@ -17,7 +17,7 @@ export default function Write() {
   const [desc, setDesc] = useState("");
   const [file, setFile] = useState("");
   const { user } = useContext(Context);
-  
+
 
   const reader = new FileReader();
 
@@ -119,7 +119,7 @@ export default function Write() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // console.log(res.cookie);
     const newPost = {
       file,
@@ -149,8 +149,8 @@ export default function Write() {
         // <Alert severity="info">Successfully submitted. Wait for admin approval !</Alert>
         // </Stack>
         // );
-       window.alert('Wait for admin approval');
-        
+        window.alert('Wait for admin approval');
+
         window.location.replace("/write");
       }
       else {
@@ -166,11 +166,22 @@ export default function Write() {
     setCategory(event.target.value);
   };
 
+  // useEffect(() => {
+  //   if (sessionStorage.getItem('Refreshed') == null) {
+  //     sessionStorage.setItem('Refreshed', 'true')
+  //     console.log('yes')
+  //     window.location.reload();
+  //   } else {
+  //     console.log('no')
+  //   }
+    
+  // }, []);
+
   return (
     <div className="write">
-   
 
-  
+
+
       {file && (
         <img className="writeImg" src={file} alt="" />
       )}
@@ -192,22 +203,22 @@ export default function Write() {
             autoFocus={true}
             onChange={e => setTitle(e.target.value)}
           />
-            <Box  sx={{maxWidth: 150,display: 'inline', gap: 15 ,width: 120}}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Category</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={category}
-          label="Age"
-          onChange={handleChange}
-        >
-          <MenuItem value={1}>Technical</MenuItem>
-          <MenuItem value={2}>Social</MenuItem>
-          <MenuItem value={3}>Geographical</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+          <Box sx={{ maxWidth: 150, display: 'inline', gap: 15, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={category}
+                label="Age"
+                onChange={handleChange}
+              >
+                <MenuItem value={1}>Technical</MenuItem>
+                <MenuItem value={2}>Social</MenuItem>
+                <MenuItem value={3}>Geographical</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
         </div>
         <div className="writeFormGroup">

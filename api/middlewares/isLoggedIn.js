@@ -2,10 +2,10 @@ import jwt from 'jsonwebtoken';
 
 export const isLoggedIn = (req, res, next) => {
 
-    // console.log('COOKIE',req);   
+     
 
     //throw error if cookie is null
-    console.log('COOKIE',req.cookies.token);
+    console.log('COOKIE',req.cookies);
     if (!req.cookies.token) {
         const response = { "Status": "Failure", "Reason": "Please login first" }
         return res.status(400).send(response)

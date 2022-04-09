@@ -279,3 +279,80 @@ export const getEachPosts = async (req, res) => {
                 
                     });
                 };
+
+
+                export const createContest = async (req, res) => {
+                    console.log('updatePost')
+                        const DB_HOST = process.env.DB_HOST
+                    
+                        const DB_USER = process.env.DB_USER
+                        const DB_PASSWORD = process.env.DB_PASSWORD
+                        const DB_DATABASE = process.env.DB_DATABASE
+                        const DB_PORT = process.env.DB_PORT
+                    
+                        const db = mysql.createPool({
+                    
+                            host: DB_HOST,
+                            user: DB_USER,
+                            password: DB_PASSWORD,
+                            database: DB_DATABASE,
+                            port: DB_PORT
+                        })
+                        db.getConnection(async (err, connection) => {
+                            console.log('Reached createContest')
+                            const from= req.body.body.from;
+                            const to =req.body.body.to;
+                            const cat= req.body.body.category
+                            // console.log('Request body',req.body)
+                            // console.log('Value',req.body.body.content_Id)
+                            // console.log('Request body',req.body.content_Id)
+                        let qry1 = `INSERT INTO tbl_contest values (0,?,?,?,'Pending');`;
+                        const qry = mysql.format(qry1, [from,to,cat])
+                            console.log("query",qry);
+                       console.log('query',qry)
+                        try {
+                            db.query(qry, (err, data) => {
+                                if (err) throw err;
+                    
+                                return res.json(data);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            return res.status(500).send('internal server error');
+                        }
+                    });
+                    };
+
+                    export const getAllContest = async (req, res) => {
+                        const DB_HOST = process.env.DB_HOST
+                    
+                        const DB_USER = process.env.DB_USER
+                        const DB_PASSWORD = process.env.DB_PASSWORD
+                        const DB_DATABASE = process.env.DB_DATABASE
+                        const DB_PORT = process.env.DB_PORT
+                    
+                        const db = mysql.createPool({
+                    
+                            host: DB_HOST,
+                            user: DB_USER,
+                            password: DB_PASSWORD,
+                            database: DB_DATABASE,
+                            port: DB_PORT
+                        })
+                        db.getConnection(async (err, connection) => {
+                        let qry = `SELECT c.contest_id, c.from_date,c.to_date,c.cat_ID, cat.cat_ID,cat.cat_Name FROM tbl_contest
+                        as c inner join tbl_cat as cat on c.cat_ID=cat.cat_ID where c.contest_status="Pending"`;
+                        try {
+                            db.query(qry, (err, data) => {
+                                if (err) throw err;
+                                // console.log('res',data);
+                                
+                                return res.status(200).json(data);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            return res.status(500).send('internal server error');
+                        }
+                    
+                        });
+                    };

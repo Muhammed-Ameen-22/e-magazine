@@ -12,13 +12,19 @@ import cors from 'cors';
 import { dirname } from 'path';
 import posts from './routes/posts.js';
 import authRoutes from './routes/auth.js';
+import contest from './routes/contest.js';
 import mysql from 'mysql';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
+
+
+
 const path = require('path');
 require("dotenv").config({ path: path.resolve('dotenv.env') });
+
+
 
 console.log("This is host",process.env);
 
@@ -174,9 +180,6 @@ app.post("/createUser1", async (req, res) => {
         }) //end of connection.query()
     }) //end of db.getConnection()
 }) //end of app.post()
-app.listen(SERVER_PORT,
-    () => console.log(`Server Started on port ${SERVER_PORT}...`));
-
 
 
 
@@ -217,3 +220,11 @@ app.use('/eachPost',posts)
 app.use('/post',posts);
 app.use('/like',posts);
 app.use('/status',posts);
+
+//contest
+
+app.use('/contest',contest);
+
+app.listen(SERVER_PORT,
+    () => console.log(`Server Started on port ${SERVER_PORT}...`));
+
