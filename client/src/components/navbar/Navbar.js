@@ -104,7 +104,7 @@ function Navbar(props) {
                     Home  {userName}
                   </Link>
                 </li>
-                <li className='nav-item'>
+                {/* <li className='nav-item'>
                   <Link
                     to='/'
                     className='nav-links'
@@ -112,7 +112,7 @@ function Navbar(props) {
                   >
                     About Us
                   </Link>
-                </li>
+                </li> */}
 
 
               </>

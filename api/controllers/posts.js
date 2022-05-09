@@ -35,6 +35,7 @@ export const createPost = async (req, res) => {
     // const user = 1;
     const likes=0;
     const category = req.body.category;
+    const sub=req.body.sub;
 
     console.log("Inside create post");
 
@@ -48,8 +49,8 @@ export const createPost = async (req, res) => {
     console.log("session is this",req.user.user_identity);
     console.log('session is this', user_id)
 
-    const sqlInsert = "INSERT INTO tbl_content VALUES (0,?,?,?,?,?,?,?,?)"
-    const insert_query = mysql.format(sqlInsert, [user_id,category,file,desc, status, title,likes,date])
+    const sqlInsert = "INSERT INTO tbl_content VALUES (0,?,?,?,?,?,?,?,?,?)"
+    const insert_query = mysql.format(sqlInsert, [user_id,category,file,desc, status, title,likes,date,sub])
     // ? will be replaced by values
     // ?? will be replaced by string
     db.getConnection(async (err, connection) => {
@@ -101,7 +102,8 @@ export const likePost = async (req, res) => {
 
     console.log("Liking the post");
 // console.log(req.body)
-   const postId=req.body.body.content_Id;
+console.log(req.body.content_Id)
+   const postId=req.body.content_Id;
 console.log("IDENTITY",req.user.user_identity)
     const user_id = req.user.user_identity;
     console.log("session is this",req.user.user_identity);

@@ -108,12 +108,7 @@ useEffect(() => {
 const handleAccept = async () => {
   // console.log("ID ACCEPTED",id)
 
-  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/acceptPost", {
-      method: "POST",
-      headers: { Accept: 'application/json', "Content-Type": "application/json", },
-      credentials: 'include',
-      body:{'content_Id':id}
-  });
+  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/acceptPost", {'content_Id':id}, {withCredentials:true});
   setStatus('accepted');
   setOpens(true);
   fetchPosts();
@@ -122,12 +117,7 @@ var [status,setStatus]=useState('')
 const handleReject = async () => {
   // console.log("ID ACCEPTED",{id})
 
-  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/rejectPost", {
-      method: "POST",
-      headers: { Accept: 'application/json', "Content-Type": "application/json", },
-      credentials: 'include',
-      body:{'content_Id':id}
-  });
+  let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/rejectPost", {'content_Id':id}, {withCredentials:true});
   setStatus('rejected');
   setOpens(true);
   fetchPosts();
@@ -227,7 +217,7 @@ const[image,setImage]=useState('')
             />
           </ListItem>
         </List> */}
-         <Snackbar open={opens} autoHideDuration={6000} onClose={handleCloseSnack}>
+         <Snackbar open={opens} autoHideDuration={1500} onClose={handleCloseSnack}>
          {alert?  <Alert onClose={handleCloseSnack} severity="info">You have {status} the post!</Alert>: <></> }
          </Snackbar>
       </Dialog>

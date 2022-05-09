@@ -90,7 +90,9 @@ export const getEachPosts = async (req, res) => {
             // var datetime = new Date().toISOString().slice(0,10);
             // console.log("Date",datetime)
             console.log(req.body)
-        let qry = `SELECT * FROM tbl_content where content_id=${req.body.body.content_Id};`;
+        let qry = `SELECT c.*, u.user_ID, u.user_Name, u.user_CD FROM tbl_content as c
+        inner join tbl_user as u on c.user_ID = u.user_ID
+        where content_id=${req.body.content_Id};`;
         try {
             db.query(qry, (err, data) => {
                 if (err) throw err;
@@ -127,7 +129,7 @@ export const getEachPosts = async (req, res) => {
             // console.log('Request body',req.body)
             // console.log('Value',req.body.body.content_Id)
             // console.log('Request body',req.body.content_Id)
-        let qry = `UPDATE tbl_content SET content_Status = 'Accepted' WHERE content_Id = ${req.body.body.content_Id};`;
+        let qry = `UPDATE tbl_content SET content_Status = 'Accepted' WHERE content_Id = ${req.body.content_Id};`;
        console.log('query',qry)
         try {
             db.query(qry, (err, data) => {
@@ -165,7 +167,7 @@ export const getEachPosts = async (req, res) => {
                 // console.log('Request body',req.body)
                 // console.log('Value',req.body.body.content_Id)
                 // console.log('Request body',req.body.content_Id)
-            let qry = `UPDATE tbl_content SET content_Status = 'Rejected' WHERE content_Id = ${req.body.body.content_Id};`;
+            let qry = `UPDATE tbl_content SET content_Status = 'Rejected' WHERE content_Id = ${req.body.content_Id};`;
            console.log('query',qry)
             try {
                 db.query(qry, (err, data) => {
@@ -237,10 +239,10 @@ export const getEachPosts = async (req, res) => {
                     })
                     db.getConnection(async (err, connection) => {
                         console.log('Reached ChangeStatus')
-                        const id = req.body.body.user_Id;
-                        const remark=req.body.body.user_remark;
-                        const status =req.body.body.user_Status;
-                        console.log('Status',req.body.body.user_Status)
+                        const id = req.body.user_Id;
+                        const remark=req.body.user_remark;
+                        const status =req.body.user_Status;
+                        console.log('Status',req.body.user_Status)
                         // var datetime = new Date().toISOString().slice(0,10);
                         // console.log("Date",datetime)
                         console.log(req.body)
@@ -300,9 +302,9 @@ export const getEachPosts = async (req, res) => {
                         })
                         db.getConnection(async (err, connection) => {
                             console.log('Reached createContest')
-                            const from= req.body.body.from;
-                            const to =req.body.body.to;
-                            const cat= req.body.body.category
+                            const from= req.body.from;
+                            const to =req.body.to;
+                            const cat= req.body.category
                             // console.log('Request body',req.body)
                             // console.log('Value',req.body.body.content_Id)
                             // console.log('Request body',req.body.content_Id)
@@ -355,4 +357,82 @@ export const getEachPosts = async (req, res) => {
                         }
                     
                         });
+                    };
+
+                    export const rejectContestPost = async (req, res) => {
+                console.log('updatePost')
+                    const DB_HOST = process.env.DB_HOST
+                
+                    const DB_USER = process.env.DB_USER
+                    const DB_PASSWORD = process.env.DB_PASSWORD
+                    const DB_DATABASE = process.env.DB_DATABASE
+                    const DB_PORT = process.env.DB_PORT
+                
+                    const db = mysql.createPool({
+                
+                        host: DB_HOST,
+                        user: DB_USER,
+                        password: DB_PASSWORD,
+                        database: DB_DATABASE,
+                        port: DB_PORT
+                    })
+                    db.getConnection(async (err, connection) => {
+                        console.log('Reached eachPost')
+                    
+                        // console.log('Request body',req.body)
+                        // console.log('Value',req.body.body.content_Id)
+                        // console.log('Request body',req.body.content_Id)
+                    let qry = `UPDATE tbl_contestpost SET content_Status = 'Rejected' WHERE cp_id = ${req.body.content_Id};`;
+                   console.log('query',qry)
+                    try {
+                        db.query(qry, (err, data) => {
+                            if (err) throw err;
+                
+                            return res.json(data);
+                        });
+                    } catch (error) {
+                        console.error(error);
+                        return res.status(500).send('internal server error');
+                    }
+                });
+                };
+
+    
+
+                export const makeWinnerContest = async (req, res) => {
+                    console.log('updatePost')
+                        const DB_HOST = process.env.DB_HOST
+                    
+                        const DB_USER = process.env.DB_USER
+                        const DB_PASSWORD = process.env.DB_PASSWORD
+                        const DB_DATABASE = process.env.DB_DATABASE
+                        const DB_PORT = process.env.DB_PORT
+                    
+                        const db = mysql.createPool({
+                    
+                            host: DB_HOST,
+                            user: DB_USER,
+                            password: DB_PASSWORD,
+                            database: DB_DATABASE,
+                            port: DB_PORT
+                        })
+                        db.getConnection(async (err, connection) => {
+                            console.log('Reached eachPost')
+                        
+                            // console.log('Request body',req.body)
+                            // console.log('Value',req.body.body.content_Id)
+                            // console.log('Request body',req.body.content_Id)
+                        let qry = `UPDATE tbl_contestpost SET content_Status = 'Winner' WHERE cp_id = ${req.body.content_Id};`;
+                       console.log('query',qry)
+                        try {
+                            db.query(qry, (err, data) => {
+                                if (err) throw err;
+                    
+                                return res.json(data);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            return res.status(500).send('internal server error');
+                        }
+                    });
                     };

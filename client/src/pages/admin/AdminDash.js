@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 // import './adminNav.css';
 
 import AdminNav from './AdminNav';
@@ -13,10 +13,20 @@ import Contest from './Contest';
 
 function AdminDash() {
     console.log('HI'); 
+    useEffect(() => {
+      if (sessionStorage.getItem('Refreshed') == null) {
+        sessionStorage.setItem('Refreshed', 'true')
+        console.log('yes')
+        window.location.reload();
+      } else {
+        console.log('no')
+      }
+      
+    }, []);
     return (
       
     <>
-    
+   
       <Router>
       
         <Switch>

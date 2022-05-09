@@ -81,11 +81,8 @@ const [id,setId]=useState('');
     
     console.log('STATUS', statuss);
     console.log('REason',reason)
-    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/status/changeStatus", {
-      // mode: 'no-cors',
-        credentials: 'include',
-        body:{user_Status:statuss , user_remark:reason, user_Id:id}
-    });
+    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/status/changeStatus",
+    {user_Status:statuss , user_remark:reason, user_Id:id}, {withCredentials:true}); 
     fetchUsers();
   }
   const handleClose = () => {

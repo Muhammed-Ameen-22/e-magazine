@@ -126,7 +126,8 @@ export default function Write() {
       //username: user.username,
       title,
       desc,
-      category
+      category,
+      sub
 
     };
     if (file) {
@@ -141,7 +142,7 @@ export default function Write() {
       } catch (err) { }
     }
     try {
-      const res = await axios.post(process.env.REACT_APP_SERVER_URL + "/create/createpost", newPost);
+      const res = await axios.post(process.env.REACT_APP_SERVER_URL + "/create/createpost", newPost  ,{ withCredentials: true });
       console.log("status", res);
       if (res.status == "200") {
         // return(
@@ -166,16 +167,23 @@ export default function Write() {
     setCategory(event.target.value);
   };
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem('Refreshed') == null) {
-  //     sessionStorage.setItem('Refreshed', 'true')
-  //     console.log('yes')
-  //     window.location.reload();
-  //   } else {
-  //     console.log('no')
-  //   }
+  const [sub,setSubCategory]=useState([])
+
+  const handleChangeSub = (event) => {
+    setSubCategory(event.target.value);
+  };
+
+ 
+  useEffect(() => {
+    if (sessionStorage.getItem('Refreshed') == null) {
+      sessionStorage.setItem('Refreshed', 'true')
+      console.log('yes')
+      window.location.reload();
+    } else {
+      console.log('no')
+    }
     
-  // }, []);
+  }, []);
 
   return (
     <div className="write">
@@ -210,7 +218,7 @@ export default function Write() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={category}
-                label="Age"
+                label="Category"
                 onChange={handleChange}
               >
                 <MenuItem value={1}>Technical</MenuItem>
@@ -219,6 +227,26 @@ export default function Write() {
               </Select>
             </FormControl>
           </Box>
+
+          <Box sx={{ maxWidth: 150, display: 'inline', gap: 15, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select"
+                id="demo-simple"
+                value={sub}
+                label="SubCategory"
+                onChange={handleChangeSub}
+              >
+                <MenuItem value={1}>Story</MenuItem>
+                <MenuItem value={2}>Poem</MenuItem>
+                <MenuItem value={3}>Article</MenuItem>
+                <MenuItem value={4}>Essay</MenuItem>
+                <MenuItem value={5}>Experience</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
 
         </div>
         <div className="writeFormGroup">
@@ -229,9 +257,10 @@ export default function Write() {
             onChange={e => setDesc(e.target.value)}
           ></textarea>
         </div>
-        <button className="writeSubmit" type="submit">
+        <div>
+        <button style={{margin: '376px 1px 1px'}} className="writeSubmit" type="submit">
           Publish
-        </button>
+        </button></div>
       </form>
     </div>
   );
