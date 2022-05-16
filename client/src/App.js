@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Write from './pages/write/Write';
 import Login from './pages/login/Login';
+import passReset from './pages/login/passReset';
 
 import AdminDash from './pages/admin/AdminDash';
 import Contest from './pages/admin/Contest'
@@ -66,6 +67,8 @@ function App() {
           
           <Route path='/Write' component={Write} />
           <Route path='/Login' component={Login} />
+          <Route path='/passReset' component={passReset} />
+
           {/* <Route path='/AdminLogin' component ={AdminLogin} /> */}
 
           <Route path='/AdminDash' component={AdminDash} /> 

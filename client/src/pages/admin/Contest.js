@@ -26,6 +26,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import Fade from 'react-reveal/Fade';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -546,8 +547,9 @@ useEffect(() => {
 
   return(
     <>
+     <Fade left>
     <h1>CONTEST </h1>
-
+    
     <div style={{ margin: '20px 119px 40px' }}>
     <h3 style={{color:"red", margin: '50px 21px 45px'}}> NEW CONTEST</h3>
     <form>
@@ -609,6 +611,7 @@ useEffect(() => {
       />
     </div>
     </div>
+    
     <div>
     <Dialog
         
@@ -812,7 +815,7 @@ useEffect(() => {
           </Toolbar>
         </AppBar>
        
-        <div style={{height: 400, margin: '108px 82px' , width: '100%', alignContent: 'center' }}>
+        <div style={{height: 400, margin: '110px 470px 82px' , width: '40%', alignContent: 'center' }}>
     
     <DataGrid
       rows={thisContest}
@@ -879,7 +882,7 @@ useEffect(() => {
 
 
 
-
+      </Fade>
       </>
   )
 

@@ -18,7 +18,7 @@ import bcrypt from 'bcrypt';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
-
+import otp from './routes/otp.js';
 
 
 const path = require('path');
@@ -91,8 +91,30 @@ app.use(express.json())
 //middleware to read req.body.<params>
 //CREATE USER
 app.post("/createUser", async (req, res) => {
-    console.log("Hello12");
-    // console.log(db);
+
+    // console.log("body",!req.body.name);
+    // console.log("body",req.body);
+    if(!req.body.name){
+        res.send({ message: "Please enter a name" });
+        return; 
+    }
+    if(!req.body.email){
+        res.send({ message: "Please enter an email" });
+        return; 
+    }
+    if(!String(req.body.email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )){
+        res.send({ message: "Please enter a valid email" });
+        return; 
+    }
+    if(!req.body.password || req.body.password.length<5){
+        res.send({ message: "Please enter a password greater than 5 characters" });
+        return; 
+    }
+    console.log("Here");
     const user = req.body.name;
     const cd = req.body.cd;
     const email = req.body.email;
@@ -104,7 +126,7 @@ app.post("/createUser", async (req, res) => {
     // console.log(hashedPassword);
     db.getConnection(async (err, connection) => {
         console.log("Connection established");
-        console.log(err);
+
         console.log(email);
         if (err) throw (err)
 
@@ -224,6 +246,12 @@ app.use('/status',posts);
 //contest
 
 app.use('/contest',contest);
+
+
+//otp
+app.use('/otp',otp);
+
+
 
 app.listen(SERVER_PORT,
     () => console.log(`Server Started on port ${SERVER_PORT}...`));

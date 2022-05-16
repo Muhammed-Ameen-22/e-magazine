@@ -31,7 +31,7 @@ export const createPost = async (req, res) => {
     const file = req.body.file;
     const title = req.body.title;
     const desc = req.body.desc;
-    const status = 'pending'
+    const status = 'Pending'
     // const user = 1;
     const likes=0;
     const category = req.body.category;
@@ -44,6 +44,8 @@ export const createPost = async (req, res) => {
     console.log(title);
     console.log(desc);
     console.log(file);
+    console.log(category);
+    console.log(sub);
 
     const user_id = req.user.user_identity;
     console.log("session is this",req.user.user_identity);
@@ -226,3 +228,192 @@ console.log("IDENTITY",req.user.user_identity)
             }
     });
 };
+
+export const getApprovedPostsUser = async (req, res) => {
+
+    const DB_HOST = process.env.DB_HOST
+    
+        const DB_USER = process.env.DB_USER
+        const DB_PASSWORD = process.env.DB_PASSWORD
+        const DB_DATABASE = process.env.DB_DATABASE
+        const DB_PORT = process.env.DB_PORT
+    
+        const db = mysql.createPool({
+    
+            host: DB_HOST,
+            user: DB_USER,
+            password: DB_PASSWORD,
+            database: DB_DATABASE,
+            port: DB_PORT
+        })
+
+        console.log('reqbody', req.body)
+
+        db.getConnection(async (err, connection) => {
+            const cat=req.body.catg;
+            const sub=req.body.sub;
+            const date=req.body.date;
+
+            if(cat === 0 && sub != 0 && date === 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where  c.sub_id='?' and   content_Status='Accepted' order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[sub])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+                
+            }
+            else if(sub === 0 && cat != 0 && date === 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where c.cat_ID='?' and content_Status='Accepted' order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[cat])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            else if(sub === 0 && cat === 0 && date != 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where ((Month(content_Date) = '?') and content_Status='Accepted') order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[date])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            else if(sub != 0 && cat === 0 && date != 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where content_Status='Accepted' and ((Month(content_Date)= '?') and c.sub_id='?')  order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[date,sub])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            else if(sub === 0 && cat != 0 && date !=0 )
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where content_Status='Accepted' and ((Month(content_Date)= '?') and c.cat_ID='?') order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[date,cat])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            else if(sub != 0 && cat != 0 && date === 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where content_Status='Accepted' and (c.cat_ID='?' and c.sub_id = '?') order by content_Date desc;`
+                let get_Qry = mysql.format(qry,[cat,sub])
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            else if(sub === 0 && cat === 0 && date === 0)
+            {
+                let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+                c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+                inner join tbl_cat as t on t.cat_ID = c.cat_ID
+                where content_Status='Accepted'  order by content_Date desc;`
+                let get_Qry = mysql.format(qry)
+                console.log(get_Qry)
+                try {
+                    db.query(get_Qry, (err, data) => {
+                        if (err) throw err;
+            
+                        return res.status(200).json(data);
+                    });
+                } catch (error) {
+                    console.error(error);
+                    return res.status(500).send('internal server error');
+                }
+       
+            }
+            
+         else{
+        let qry = `SELECT c.cat_ID, c.content_Id, c.content_Image, c.content, c.content_Title, c.content_Likes,
+         c.content_Date,c.user_ID,c.content_ID, t.cat_Name, t.cat_ID FROM tbl_content as c 
+         inner join tbl_cat as t on t.cat_ID = c.cat_ID
+         where (c.cat_ID='?' and c.sub_id='?') and  ((Month(content_Date) = '?') and content_Status='Accepted') order by content_Date desc;`
+         let get_Qry = mysql.format(qry,[cat,sub,date])
+         console.log(get_Qry)
+         
+         
+        try {
+            db.query(get_Qry, (err, data) => {
+                if (err) throw err;
+    
+                return res.status(200).json(data);
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('internal server error');
+        }
+         }
+        });
+    };

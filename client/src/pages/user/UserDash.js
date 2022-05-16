@@ -28,6 +28,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import Grid from "@material-ui/core/Grid";
+import Fade from 'react-reveal/Fade';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,33 +58,16 @@ const [post,setPost]=useState('');
 
 
 
-// const [error, setError] = useState(null);
-// const [isLoaded, setIsLoaded] = useState(false);
-// const [items, setItems] = useState([]);
-// const [q, setQ] = useState("");
-// const [searchParam] = useState(["capital", "name", "numericCode"]);
-// const [filterParam, setFilterParam] = useState(["All"]); 
 
+const[date,setDate]=useState(0)
 
-
-
+const handleChangeDate=(e)=>
+{
+  setDate(e.target.value)
+}
 
 const [category, setCategory] = useState('');
-// const handleChange = async(event) =>{
 
-//   console.log('Value',event.target.value);
-//   setCategory(event.target.value);
-//   console.log('HandleChange',category)
-
-// let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/filterPost/getFilterPosts", {
-//   headers: { Accept: 'application/json', "Content-Type": "application/json", },
-//   credentials: 'include',
-//   body:{'category':event.target.value}
-// })
-//  console.log('RES',res);
-//   {content.map(renderCard)}
-
-// };
 const [cd,setCD]=useState('');
 const [name,setName]=useState('')
 
@@ -144,19 +130,47 @@ const handleClose = () => {
     }
   }
 
+// const handleSearch = async () => {
+//   let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getApprovedPosts", {
+    
+//     credentials: 'include',
+//   });
+//   res = await res.json();
+ 
+//   console.log("this is res in fetchPosts", res);
+//   res = res.map(({ content_Id: id, ...rest }) => ({ id, ...rest }));
+
+
+//   posts = res;
+
+//   console.log('posts in fetchPosts', posts)
+  
+
+//   setContent(res)
+
+// };
 
 
   var posts;
   const [content, setContent] = useState([]);
   const fetchPosts = async () => {
-    let res = await fetch(process.env.REACT_APP_SERVER_URL + "/fetchPost/getApprovedPosts", {
-      // mode: 'no-cors',
-      credentials: 'include',
-    });
-    res = await res.json();
+    console.log('Category',catg)
+    console.log('Sub',sub)
+
+    const val = {
+      catg,
+      sub,
+      date
+    };
+
+    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/fetchPost/getApprovedPostsUser", val,
+    {withCredentials: true });
+    // res = await res.json();
     // (result) => {
     //   setIsLoaded(true);
     //   setItems(result);
+    console.log("this is res in fetchPosts", res.data);
+    res = res.data;
     console.log("this is res in fetchPosts", res);
     res = res.map(({ content_Id: id, ...rest }) => ({ id, ...rest }));
 
@@ -165,17 +179,9 @@ const handleClose = () => {
 
     console.log('posts in fetchPosts', posts)
     
-    //     for(var i=0;i<6;i++)
-    //     {
-    //  getTitle(posts[i].content)
-    //     }
 
-    // res.forEach((item, i) => { item.id = i + 1; });
-    // console.log('res', res) 
-    
     setContent(res)
-    // console.log(res)
-    // console.log('content',posts.cat_Name)
+
   };
   
   useEffect(() => {
@@ -225,28 +231,41 @@ const handleCloseSnack = (event, reason) => {
 };
 
 
+const [sub,setSub]=useState(0)
+const [catg, setCatg] = useState(0);
 
-  const renderCard = (card, index) => {
+  const handleChange = (event) => {
+    setCatg(event.target.value);
+  };
+
+
+
+  const handleChangeSub = (event) => {
+    setSub(event.target.value);
+  };
+
+  const  renderCard = (card, index) => {
     // console.log("POSTS",content[0].cat_Name);
     console.log("Category", category)
    
-    // let dataBuffer = new Buffer(card.content_Image);
-    // let mediaType = 'PNG';
-    // console.log('category',category);
-    // console.log('category',cat);
+ 
+
+
+
+
+
     return (
 
 <>
-
-
+{/* <Grid container spacing={3}> */}
       <div className='cards' onClick={() => {handleClickOpen(card.id)}}>
-
+        
         <CardItem cols ={3}
       
           src={card.content_Image}
           id={card.id}
             text={card.content_Title}
-          label={card.cat_Name}
+          label={card.cat_Name} 
           path='/UserDash'
           
          
@@ -281,10 +300,10 @@ const handleCloseSnack = (event, reason) => {
               
             </IconButton>
             <Typography sx={{ ml: 170, marginTop:1 }} variant="h6" component="div">
-              {likes} <ThumbUpIcon />
-              <Button  autoFocus color="inherit" onClick={() => {handleLike(card.id)}}>
-              Like
-            </Button>
+              {likes} <IconButton onClick={() => {handleLike(card.id)}}><ThumbUpOutlinedIcon /></IconButton>
+              {/* <Button  autoFocus color="inherit" onClick={() => {handleLike(card.id)}}> */}
+              {/* Like
+            </Button> */}
             </Typography>
             
             {/* <Button autoFocus color="inherit" onClick={handleAccept}>
@@ -307,13 +326,14 @@ const handleCloseSnack = (event, reason) => {
          </Snackbar>
        </Dialog>
     </div>
-
+{/* </Grid> */}
     </>
       
 
 
     );
           
+
   };
 
 
@@ -360,71 +380,90 @@ const handleCloseSnack = (event, reason) => {
     </FormControl>
   </Box>
   </div> */}
-  <div className="grid" 
-  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <div style={{width:'300px' ,margin:'76px 500px 2px',display:'flex'}}>
+  <Box sx={{ maxWidth: 150, display: 'inline', gap: 55, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={catg}
+                label="Category"
+                onChange={handleChange}
+              >
+                 <MenuItem value={0} selected>All</MenuItem>
+                <MenuItem value={1}>Technical</MenuItem>
+                <MenuItem value={2}>Social</MenuItem>
+                <MenuItem value={3}>Geographical</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ maxWidth: 150, display: 'inline', gap: 55, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select"
+                id="demo-simple"
+                value={sub}
+                label="SubCategory"
+                onChange={handleChangeSub}
+              >
+                <MenuItem value={0} selected>All</MenuItem>
+                <MenuItem value={1}>Story</MenuItem>
+                <MenuItem value={2}>Poem</MenuItem>
+                <MenuItem value={3}>Article</MenuItem>
+                <MenuItem value={4}>Essay</MenuItem>
+                <MenuItem value={5}>Experience</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ maxWidth: 150, display: 'inline', gap: 55, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select">Month</InputLabel>
+              <Select
+                labelId="demo-simple-select"
+                id="demo-simple"
+                value={date}
+                label="Month"
+                onChange={handleChangeDate}
+              >
+                <MenuItem value={0}selected>All</MenuItem>
+                <MenuItem value={1}>January</MenuItem>
+                <MenuItem value={2}>February</MenuItem>
+                <MenuItem value={3}>March</MenuItem>
+                <MenuItem value={4}>April</MenuItem>
+                <MenuItem value={5}>May</MenuItem>
+                <MenuItem value={6}>June</MenuItem>
+                <MenuItem value={7}>July</MenuItem>
+                <MenuItem value={8}>August</MenuItem>
+                <MenuItem value={9}>September</MenuItem>
+                <MenuItem value={10}>October</MenuItem>
+                <MenuItem value={11}>November</MenuItem>
+                <MenuItem value={12}>December</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          { <Button autoFocus color="inherit" onClick={fetchPosts}>
+              Search
+            </Button> }
+
+  </div>
+  <Fade right>
+  {/* <div className="grid" 
+  style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> */}
+ <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 8, sm: 8, md: 12 }}>
      {content.map(renderCard)}
+     </Grid>
+     </Fade>
     {/* {filteredList.content.map(renderCard)} */}
-    </div>;
+    {/* </div>; */}
+    
     </>
 
 
-  // var[title,getTitle]=useState([])
 
-  // for(var i=0;i<10;i++)
-  // {
-  //   getTitle(posts[i].content);
-  //   console.log('title',title)
-  // }
-
-
-
-  // return (
-  //   <div className="grid">{posts.map(renderCard)}</div>);
-
-  //   <div className='cards'>
-  //     <h1>Check out these new posts!</h1>
-  //     <div className='cards__container'>
-  //       <div className='cards__wrapper'>
-  //         <ul className='cards__items'>
-  //           <CardItem
-  //             src='images/img-9.jpg'
-  //             text={title}
-  //             label='Adventure'
-
-  //             path='/services'
-  //           />
-  //           <CardItem
-  //             src='images/img-2.jpg'
-  //             text={title}
-  //             label='Luxury'
-  //             path='/services'
-  //           />
-  //         </ul>
-  //         <ul className='cards__items'>
-  //           <CardItem
-  //             src='images/img-3.jpg'
-  //             text={title}
-  //             label='Mystery'
-  //             path='/services'
-  //           />
-  //           <CardItem
-  //             src='images/img-4.jpg'
-  //             text='Experience Football on Top of the Himilayan Mountains'
-  //             label='Adventure'
-  //             path='/products'
-  //           />
-  //           <CardItem
-  //             src='images/img-8.jpg'
-  //             text='Ride through the Sahara Desert on a guided camel tour'
-  //             label='Adrenaline'
-  //             path='/sign-up'
-  //           />
-  //         </ul>
-  //       </div>
-  //     </div>
-  //   </div>
-
-  // );
 };
   
 // };

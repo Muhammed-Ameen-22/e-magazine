@@ -99,7 +99,9 @@ export default function Write() {
   //     </div>
   //   );
   // }
+const [errorMessage,setErrorMessage]=useState('')
 
+const[open,setOpen]=useState(false)
   const imgSubmit = (e) => {
     console.log(e.target.files[0])
     reader.readAsDataURL(e.target.files[0]);
@@ -119,6 +121,43 @@ export default function Write() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+if(!file)
+{
+  // console.log('no image')
+  // setErrorMessage('Insert image')
+  window.alert('Insert Image');
+  // console.log('Error message',errorMessage)
+  // setOpen(true)
+}
+if(!title)
+{
+  
+  window.alert('Insert title');
+}
+
+if(!desc)
+{
+ 
+  window.alert('Insert content');
+
+}
+if(!category)
+{
+ 
+  window.alert('Select category');
+
+}
+
+if(!sub)
+{
+ 
+  window.alert('Select Subcategory');
+
+}
+
+
+
+
 
     // console.log(res.cookie);
     const newPost = {
@@ -141,6 +180,9 @@ export default function Write() {
 
       } catch (err) { }
     }
+
+    if(file && title && desc && category && sub)
+    {
     try {
       const res = await axios.post(process.env.REACT_APP_SERVER_URL + "/create/createpost", newPost  ,{ withCredentials: true });
       console.log("status", res);
@@ -158,7 +200,9 @@ export default function Write() {
         window.alert("ERROR! Something went wrong. Please try again");
       }
       //window.location.replace("/post/" + res.data._id);
-    } catch (err) { }
+    } 
+  catch (err) { }
+    }
   };
 
   const [category, setCategory] = React.useState('');
@@ -167,9 +211,10 @@ export default function Write() {
     setCategory(event.target.value);
   };
 
-  const [sub,setSubCategory]=useState([])
+  const [sub,setSubCategory]=useState('')
 
   const handleChangeSub = (event) => {
+    console.log('Subcategory',event.target.value)
     setSubCategory(event.target.value);
   };
 
@@ -198,13 +243,13 @@ export default function Write() {
           <label htmlFor="fileInput">
             <i className="writeIcon fas fa-plus"></i>
           </label>
-          <input
+          <input 
             type="file"
             id="fileInput"
             style={{ display: "none" }}
             onChange={imgSubmit}
           />
-          <input
+          <input 
             type="text"
             placeholder="Title"
             className="writeInput"
@@ -261,7 +306,9 @@ export default function Write() {
         <button style={{margin: '376px 1px 1px'}} className="writeSubmit" type="submit">
           Publish
         </button></div>
+        {open?<Alert  severity="error">{errorMessage}</Alert>:<></>}
       </form>
+      
     </div>
   );
 }

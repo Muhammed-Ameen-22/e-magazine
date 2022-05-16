@@ -1,5 +1,5 @@
 import express from 'express';
-import { likePost,getEachContestPosts,getCurrContest, acceptContestPost, 
+import { likePost,getEachContestPosts,getCurrContest, acceptContestPost, getEachCompContestPosts, 
     rejectContestPost,getApprovedContestPosts, startContest,stopContest,
     getEachContest,createContestPost, getCompContest, getWinnerContestPost } from '../controllers/contest.js';
 
@@ -19,6 +19,7 @@ router.post('/rejectContestPost',rejectContestPost);
 router.post('/acceptContestPost',acceptContestPost);
 router.post('/getApprovedContestPosts',getApprovedContestPosts)
 router.post('/getEachContestPosts',isLoggedIn,getEachContestPosts)
+router.post('/getEachCompContestPosts',isLoggedIn,getEachCompContestPosts)
 router.post('/likePost',isLoggedIn,likePost)
 router.post('/makeWinnerContest',makeWinnerContest)
 router.post('/getWinnerContestPost',getWinnerContestPost)

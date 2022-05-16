@@ -103,7 +103,7 @@ useEffect(() => {
 // const handleReject = async () => {
 //   // console.log("ID ACCEPTED",{id})
 
-//   let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/rejectPost", {
+//   let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/post/", {
 //       method: "POST",
 //       headers: { Accept: 'application/json', "Content-Type": "application/json", },
 //       credentials: 'include',

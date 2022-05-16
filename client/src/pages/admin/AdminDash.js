@@ -36,6 +36,7 @@ function AdminDash() {
          
         </Switch>
       </Router>
+      <h1 style={{margin:'314px 1px 1px', fontSize:'48px'}}>WELCOME ADMIN</h1>
     </>
   );
 }

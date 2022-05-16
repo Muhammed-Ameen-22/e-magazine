@@ -351,13 +351,23 @@ export const startContest = async (req, res) => {
                         })
                         db.getConnection(async (err, connection) => {
                             // console.log(req.body)
+
+            
+            const sub=req.body.sub;
+            const id=req.body.con_id;
+            if(sub != 0)
+            {
+
                         let qry = `SELECT   c.*, u.user_Name FROM tbl_contestpost as c 
                          inner join tbl_user as u 
                          on c.user_ID = u.user_ID
-                         where content_Status='Accepted' and contest_id = ${req.body.contest_Id}`;
-                         console.log(qry)
+                         where (content_Status='Accepted' and c.sub_id='?') and contest_id = ? `;
+
+                        
+                         let get_Qry = mysql.format(qry,[sub,id])
+                         console.log(get_Qry)
                         try {
-                            db.query(qry, (err, data) => {
+                            db.query(get_Qry, (err, data) => {
                                 if (err) throw err;
                     
                                 return res.status(200).json(data);
@@ -366,7 +376,29 @@ export const startContest = async (req, res) => {
                             console.error(error);
                             return res.status(500).send('internal server error');
                         }
+            }
+
+            else if(sub === 0)
+            {
+
+                        let qry = `SELECT   c.*, u.user_Name FROM tbl_contestpost as c 
+                         inner join tbl_user as u 
+                         on c.user_ID = u.user_ID
+                         where content_Status='Accepted' and contest_id = ? `;
+                         let get_Qry = mysql.format(qry,[id])
+                         console.log(get_Qry)
+                        try {
+                            db.query(get_Qry, (err, data) => {
+                                if (err) throw err;
                     
+                                return res.status(200).json(data);
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            return res.status(500).send('internal server error');
+                        }
+                    }
+
                         });
                     };
         
@@ -455,6 +487,47 @@ export const startContest = async (req, res) => {
                         });
                     };
 
+
+                    export const getEachCompContestPosts = async (req, res) => {
+                        const DB_HOST = process.env.DB_HOST
+                    
+                        const DB_USER = process.env.DB_USER
+                        const DB_PASSWORD = process.env.DB_PASSWORD
+                        const DB_DATABASE = process.env.DB_DATABASE
+                        const DB_PORT = process.env.DB_PORT
+                    
+                        const db = mysql.createPool({
+                    
+                            host: DB_HOST,
+                            user: DB_USER,
+                            password: DB_PASSWORD,
+                            database: DB_DATABASE,
+                            port: DB_PORT
+                        })
+                        db.getConnection(async (err, connection) => {
+                            console.log('req bof y', req.body);
+                        let qry = `SELECT c.*,
+                         u.user_Name, u.user_CD FROM tbl_contestpost as c
+                         inner join tbl_user as u 
+                         on c.user_ID = u.user_ID where cp_id= ${req.body.content_Id} ;`;
+                        //  && c.content_Status ='pending' and 'accepted'
+                        console.log('qry',qry)
+                        try {
+                            db.query(qry, (err, data) => {
+                                // console.log('res',res.json(data));
+                                if (err) throw err;
+                                
+                                
+                                return res.status(200).json(data);
+                                // console.log('res',res)
+                            });
+                        } catch (error) {
+                            console.error(error);
+                            return res.status(500).send('internal server error');
+                        }
+                    
+                        });
+                    };
 
 
 

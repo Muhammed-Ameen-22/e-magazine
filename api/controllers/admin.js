@@ -19,7 +19,9 @@ export const getAllUsers = async (req, res) => {
         port: DB_PORT
     })
     db.getConnection(async (err, connection) => {
-    let qry = `SELECT * FROM tbl_user;`;
+    let qry = `SELECT u.*, count(c.content) FROM tbl_user as u
+    left join tbl_content as c on u.user_ID = c.user_ID
+    group by user_ID`;
     try {
         db.query(qry, (err, data) => {
             if (err) throw err;
@@ -52,7 +54,17 @@ const DB_HOST = process.env.DB_HOST
         port: DB_PORT
     })
     db.getConnection(async (err, connection) => {
-    let qry = `SELECT * FROM tbl_content;`;
+        console.log('req body',req.body)
+        const fdate=req.body.from
+        const tdate=req.body.to
+        // console.log('from',req.body.from.toLocaleDateString("en-GB"))
+    let query = `SELECT c.*, u.user_ID, u.user_Name, u.user_CD, s.*, cat.* FROM tbl_content as c
+    inner join tbl_user as u on c.user_ID = u.user_ID
+    inner join tbl_cat as cat on c.cat_ID= cat.cat_ID
+    inner join tbl_subcat as s on s.sub_id=c.sub_id 
+    where c.content_Date >= ? and c.content_Date <= ? order by c.content_Id;`
+
+    const qry = mysql.format(query, [fdate,tdate])
     try {
         db.query(qry, (err, data) => {
             if (err) throw err;
@@ -66,6 +78,48 @@ const DB_HOST = process.env.DB_HOST
 
     });
 };
+
+
+export const getmainAllPosts = async (req, res) => {
+
+    const DB_HOST = process.env.DB_HOST
+    
+        const DB_USER = process.env.DB_USER
+        const DB_PASSWORD = process.env.DB_PASSWORD
+        const DB_DATABASE = process.env.DB_DATABASE
+        const DB_PORT = process.env.DB_PORT
+    
+        const db = mysql.createPool({
+    
+            host: DB_HOST,
+            user: DB_USER,
+            password: DB_PASSWORD,
+            database: DB_DATABASE,
+            port: DB_PORT
+        })
+        db.getConnection(async (err, connection) => {
+            
+            // console.log('from',req.body.from.toLocaleDateString("en-GB"))
+        let query = `SELECT c.*, u.user_ID, u.user_Name, u.user_CD, s.*, cat.* FROM tbl_content as c
+        inner join tbl_user as u on c.user_ID = u.user_ID
+        inner join tbl_cat as cat on c.cat_ID= cat.cat_ID
+        inner join tbl_subcat as s on s.sub_id=c.sub_id 
+         order by c.content_Id;`
+    
+        const qry = mysql.format(query)
+        try {
+            db.query(qry, (err, data) => {
+                if (err) throw err;
+    
+                return res.status(200).json(data);
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('internal server error');
+        }
+    
+        });
+    };
 
 export const getEachPosts = async (req, res) => {
     
@@ -246,40 +300,55 @@ export const getEachPosts = async (req, res) => {
                         // var datetime = new Date().toISOString().slice(0,10);
                         // console.log("Date",datetime)
                         console.log(req.body)
+
                     let qry = `Insert into tbl_remark values(0,?,?)`;
                     const insert_qry = mysql.format(qry, [id,remark])
                     let qry2 = `UPDATE tbl_user SET user_Status = ? WHERE user_ID = ?;`;
                     const update_qry = mysql.format(qry2, [status,id])
-                    console.log(qry2);
+                    console.log(update_qry);
                     let qry3 = `DELETE from tbl_remark where user_ID=?;`;
                     const delete_qry = mysql.format(qry3, [id])
-                    console.log(qry2);       
+                    console.log(delete_qry);       
 
                     console.log('Statuus',status)
                     try {
+                        if(remark==='HI')
+                        {
+                            db.query(update_qry, (err, data) => { 
+                                db.query(delete_qry, (err, data) => {
+                                    if   (err) throw err;
+            
+                                })
+                                   
+                            if   (err) throw err;
+                
+                            return res.status(200).json(data);
+
+                        })
+                    }
+                    else
+                    {
                         db.query(insert_qry, (err, data) => {
                             db.query(update_qry, (err, data) => {
-                                if(status==='Active')
-                                {
-                                    db.query(delete_qry, (err, data) => {
+                               
                                         if   (err) throw err;
                 
-                           
-                                });
-                            }
+                            })
                              
                             
                             if   (err) throw err;
                 
                             return res.status(200).json(data);
                             });
-                        });
-                    } catch (error) {
+                        }
+                    } 
+                    catch (error) {
                         console.error(error);
                         return res.status(500).send('internal server error');
                     }
                 
                     });
+                
                 };
 
 
@@ -436,3 +505,50 @@ export const getEachPosts = async (req, res) => {
                         }
                     });
                     };
+
+
+                    export const getEachUserPosts = async (req, res) => {
+
+                        const DB_HOST = process.env.DB_HOST
+                        
+                            const DB_USER = process.env.DB_USER
+                            const DB_PASSWORD = process.env.DB_PASSWORD
+                            const DB_DATABASE = process.env.DB_DATABASE
+                            const DB_PORT = process.env.DB_PORT
+                        
+                            const db = mysql.createPool({
+                        
+                                host: DB_HOST,
+                                user: DB_USER,
+                                password: DB_PASSWORD,
+                                database: DB_DATABASE,
+                                port: DB_PORT
+                            })
+                            db.getConnection(async (err, connection) => {
+                                console.log('req body',req.body)
+                                const id=req.body.id;
+                                
+                                // console.log('from',req.body.from.toLocaleDateString("en-GB"))
+                            let query = `SELECT c.*, u.user_ID, u.user_Name, u.user_CD, s.*, cat.* FROM tbl_content as c
+                            inner join tbl_user as u on c.user_ID = u.user_ID
+                            inner join tbl_cat as cat on c.cat_ID= cat.cat_ID
+                            inner join tbl_subcat as s on s.sub_id=c.sub_id 
+                            where u.user_ID=? order by c.content_Id;`
+                        
+                            const qry = mysql.format(query, [id])
+
+                            console.log(qry)
+                            try {
+                                db.query(qry, (err, data) => {
+                                    if (err) throw err;
+                        
+                                    return res.status(200).json(data);
+                                });
+                            } catch (error) {
+                                console.error(error);
+                                return res.status(500).send('internal server error');
+                            }
+                        
+                            });
+                        };
+                        

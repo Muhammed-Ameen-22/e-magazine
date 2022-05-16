@@ -76,6 +76,19 @@ const[conid,setConId]=useState('')
 // const [filterParam, setFilterParam] = useState(["All"]); 
 
 
+const [sub,setSub]=useState(0)
+const [catg, setCatg] = useState(0);
+
+  const handleChange = (event) => {
+    setCatg(event.target.value);
+  };
+
+
+
+  const handleChangeSub = (event) => {
+    setSub(event.target.value);
+    // fetchPosts()
+  };
 
 
 const [cd,setCD]=useState('');
@@ -87,7 +100,7 @@ const [category, setCategory] = useState('');
     console.log('id',id);
 setId(id);
 
-    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/contest/getEachContestPosts", 
+    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/contest/getEachCompContestPosts", 
     {'content_Id':id},{ withCredentials: true });
 console.log('res',res)
 setOpen(true);
@@ -146,9 +159,14 @@ const handleClose = () => {
   var posts;
   const [content, setContent] = useState([]);
   const fetchPosts = async () => {
+    const con_id=location.state.detail;
+    const val ={
+      sub,
+      con_id
+    }
     
     let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/contest/getApprovedContestPosts", 
-    {'contest_Id':location.state.detail},{ withCredentials: true });
+   val,{ withCredentials: true });
 
     res = res.data;
     // (result) => {
@@ -301,6 +319,33 @@ const handleCloseSnack = (event, reason) => {
 
 
   return <>
+
+<div style={{width:'300px' ,margin:'76px 500px 2px',display:'flex'}}>
+  
+          <Box sx={{ maxWidth: 150, display: 'inline', gap: 55, width: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select"
+                id="demo-simple"
+                value={sub}
+                label="SubCategory"
+                onChange={handleChangeSub}
+              >
+                <MenuItem value={0} selected>All</MenuItem>
+                <MenuItem value={1}>Story</MenuItem>
+                <MenuItem value={2}>Poem</MenuItem>
+                <MenuItem value={3}>Article</MenuItem>
+                <MenuItem value={4}>Essay</MenuItem>
+                <MenuItem value={5}>Experience</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          { <Button autoFocus color="inherit" onClick={fetchPosts}>
+              Search
+            </Button> }
+
+  </div>
   
   <div className="grid" 
   style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -87,7 +87,8 @@ const [category, setCategory] = useState('');
 
 setId(id);
 
-    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/eachPost/getEachPosts", {'content_Id':id},{withCredentials:true});
+    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/eachPost/getEachPosts",
+     {'content_Id':id},{withCredentials:true});
     
     setDesc(res.data[0].content)
     setImage(res.data[0].content_Image)

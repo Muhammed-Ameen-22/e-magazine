@@ -83,7 +83,7 @@ const [category, setCategory] = useState('');
     console.log('id',id);
 setId(id);
 
-    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/contest/getEachContestPosts", 
+    let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/contest/getEachCompContestPosts", 
     {'content_Id':id},{ withCredentials: true });
 console.log('res',res)
 setOpen(true);

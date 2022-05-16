@@ -28,6 +28,7 @@ import CardItem from '../../components/carditem/CardItem.js';
 import { AiOutlineConsoleSql } from 'react-icons/ai';
 import UserDash from './UserDash'
 import "../write/write.css";
+import Fade from 'react-reveal/Fade';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -63,7 +64,7 @@ export default function UserContest() {
 
   };
 
-  const [sub,setSubCategory]=useState([])
+  const [sub,setSubCategory]=useState()
 
   const handleChangeSub = (event) => {
     setSubCategory(event.target.value);
@@ -370,6 +371,7 @@ const [compContest,setCompContest]=useState([])
   // const renderCard = (card, index) => {
     return (
       <>
+      <Fade up>
         <h1>CONTEST</h1>
 
         <div style={{ margin: '20px 119px 40px' }}>
@@ -585,18 +587,9 @@ const [compContest,setCompContest]=useState([])
           </div>
         </div>
 
-
+        </Fade>
 
       </>
     )
   }
 
-//   return<>
-//    <div className="grid" 
-//   style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//      {thisContest.map(renderCard)}
-    
-//     </div></>
-
-    
-// }

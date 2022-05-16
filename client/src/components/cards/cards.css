@@ -1,6 +1,7 @@
 .cards {
     padding: 4rem;
     width: 50%;
+    max-width: 345;
     background: #fff;
     float: left;
   position: relative;
