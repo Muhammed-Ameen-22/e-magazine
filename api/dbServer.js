@@ -114,6 +114,7 @@ app.post("/createUser", async (req, res) => {
         res.send({ message: "Please enter a password greater than 5 characters" });
         return; 
     }
+
     console.log("Here");
     const user = req.body.name;
     const cd = req.body.cd;
@@ -134,6 +135,10 @@ app.post("/createUser", async (req, res) => {
         const search_query = mysql.format(sqlSearch, [email])
         const sqlInsert = "INSERT INTO tbl_user VALUES (0,?,?,?,?,?)"
         const insert_query = mysql.format(sqlInsert, [user, cd, email, hashedPassword,status])
+
+        const sqlInsert2 = "INSERT INTO tbl_login VALUES (?,?,'Content Creator')"
+        const insert_query2 = mysql.format(sqlInsert2, [email, hashedPassword])
+
         // ? will be replaced by values
         // ?? will be replaced by string
         await connection.query(search_query, async (err, result) => {
@@ -149,6 +154,15 @@ app.post("/createUser", async (req, res) => {
             }
             else {
                 await connection.query(insert_query, (err, result) => {
+                    connection.query(insert_query2, (err, result) => {
+
+                        // connection.release()
+                        if (err) throw (err)
+                        console.log("--------> Created new User")
+                        console.log(result.insertId)
+                        // res.sendStatus(201)
+                    })
+
                     connection.release()
                     if (err) throw (err)
                     console.log("--------> Created new User")
@@ -217,8 +231,29 @@ app.get("/loginUser", (req, res) => {
 
 
 
-
-
+app.post("/changePassword", async (req, res) => {
+    const email = req.body.email;
+    
+console.log('REQ',req.body)
+    console.log("hi", req.body.email, req.body.password);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    db.getConnection(async (err, connection) => {
+        
+        if (err) throw (err)
+        
+        const sqlInsert = "update tbl_user set user_Pass=? where user_Email=?"
+        const insert_query = mysql.format(sqlInsert, [hashedPassword,email])
+        // ? will be replaced by values
+        // ?? will be replaced by string
+                await connection.query(insert_query, (err, result) => {
+                    connection.release()
+                    if (err) throw (err)
+                    console.log("Changed Password")
+                    // console.log(result.insertId)
+                    res.sendStatus(201)
+                })
+})
+});
 
 app.get("/logout", (req, res) => {
     console.log("logging out ",req.session.user);

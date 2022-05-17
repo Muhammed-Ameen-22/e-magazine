@@ -1,8 +1,8 @@
 import express from 'express';
 const router = express.Router();
 
-import {generateOTP} from '../controllers/otp.js';
+import {generateOTP,validateOTP} from '../controllers/otp.js';
 
 router.post('/generateOTP', generateOTP);
-
+router.post('/validateOTP',validateOTP)
 export default router;

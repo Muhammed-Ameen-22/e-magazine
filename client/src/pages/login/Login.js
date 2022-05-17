@@ -15,6 +15,7 @@ import Slide from '@mui/material/Slide';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
+import { setWeekYear } from "date-fns";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -50,18 +51,39 @@ const [emailForgot,setEmailForgot]=useState('')
   const [signInStatus, setSignInStatus] = useState("");
 const [alert,setAlert]=useState(false)
 const[openA,setOpenA]=useState(false)
+
   const handlePass=async()=>
   {
-setAlert(true)
-setOpen(false);
-setOpenA(true);
+ 
 console.log('Forgot Email',emailForgot)
 localStorage.setItem('email',emailForgot)
 let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/otp/generateOTP", 
     {'email':emailForgot},{ withCredentials: true });
 
-  } 
+    if(res.data.message=='Try with registered email')
+    {
+      
+      setTryEmail('Try with registered email')
+    }
+    else
+    {
+      window.alert('OTP SENT TO MAIL ID')
+        // setTryEmail('OTP sent to mail id')
+        setOpen(false);
 
+      setAlert(true)
+      console.log('alert',alert)
+      
+      setOpenA(true);
+    
+      console.log('res DATA ', res.data.key)
+      localStorage.setItem('resetKey',res.data.key)
+     
+    history.push('/passReset')
+  } 
+  }
+
+  const[tryEmail,setTryEmail]=useState('')
   const handleAlertClose=()=>
   {
     setAlert(false)
@@ -271,7 +293,9 @@ let res = await axios.post(process.env.REACT_APP_SERVER_URL + "/otp/generateOTP"
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handlePass}>Submit</Button>
+          
         </DialogActions>
+        <h5 style={{marginLeft:'46px',color:'red'}}>{tryEmail}</h5>
       </Dialog>
     </div>
      

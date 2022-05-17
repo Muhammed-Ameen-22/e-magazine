@@ -1,5 +1,14 @@
 import React , {useState,useEffect} from 'react';
-import { DataGrid,  GridToolbar } from '@mui/x-data-grid';
+import { DataGrid,  GridToolbar ,GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+  gridVisibleSortedRowIdsSelector,
+  useGridApiContext} from '@mui/x-data-grid';
+  import jsPDF from "jspdf";
+  import PrintIcon from '@mui/icons-material/Print';
+  import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -52,6 +61,100 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 export default function Postview() {
+
+
+  const exportPdf = (PrintData, Heading, FileName) => {
+    const doc = new jsPDF()
+    doc.autoTable({
+        margin: { top: 72 },
+        didDrawPage: (data) => {
+            var currentPageNo = doc.internal.getCurrentPageInfo().pageNumber;
+            var str = 'Page ' + currentPageNo;
+            data.settings.margin.top = 10;
+            if (currentPageNo === 1) {
+     
+                doc.setFontSize(15);
+                doc.text(Heading, 20, 40);
+                doc.setFontSize(12);
+                doc.text(`List of Posts Created`, 20, 46);
+                doc.text(`Generated At : ${new Date()}`, 20, 52);
+                // doc.text(`From : ${fdate}}`, 20, 52);
+            }
+            doc.setFontSize(10);
+            var pageSize = doc.internal.pageSize;
+            var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+            doc.text(str, data.settings.margin.left, pageHeight - 10);
+        },
+        ...PrintData
+    });
+    doc.save(`${FileName}.pdf`)
+  }
+  
+  const getFilteredRows = ({ apiRef }: GridCsvGetRowsToExportParams) => gridVisibleSortedRowIdsSelector(apiRef);
+  
+  const CustomToolbar = (props) => {
+    const apiRef = useGridApiContext();
+  
+    const CSVToJSON = csv => {
+        const lines = csv.split('\n');
+        // Removing '\r'
+        for (var i = 0; i < lines.length; i++) { lines[i] = lines[i].replace('\r', ''); }
+        const keys = lines[0].split(',');
+        return lines.slice(1).map(line => {
+            return line.split(',').reduce((acc, cur, i) => {
+                const toAdd = {};
+                toAdd[keys[i]] = cur;
+                return { ...acc, ...toAdd };
+            }, {});
+        });
+    };
+  
+    const handleExport = (options: GridCsvExportOptions) => {
+        if (options.type === 'pdf') {
+          console.log("PDF");
+            
+              console.log("USER");
+                exportPdf({
+                    body: CSVToJSON(apiRef.current.getDataAsCsv(options)),
+                    columns: [
+                        { header: 'Sl No', dataKey: 'ID' },
+                        { header: 'Title', dataKey: 'Title' },                            
+                        { header: 'Content Creator', dataKey: 'Content Creator' },
+                        { header: 'Category', dataKey: 'Category' },
+                        { header: 'Sub Category', dataKey: 'Sub Category' },
+                        { header: 'Submitted Date', dataKey: 'Submitted Date' },
+                        { header: `Status`, dataKey: `Status` },
+                    ]
+                }, 'E-MAGAZINE', 'E-Magazine:Posts');
+            
+        } else if (options.type === 'csv') {
+            apiRef.current.exportDataAsCsv(options);
+        }
+    } 
+  
+    return (
+      <GridToolbarContainer>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton />
+          <GridToolbarDensitySelector />
+          <Button
+              color={'primary'}
+              startIcon={<PrintIcon />}
+              onClick={() => handleExport({ getRowsToExport: getFilteredRows, type: 'pdf' })}
+          >
+              Export pdf
+          </Button>
+          <Button
+              color={'primary'}
+              startIcon={<FileDownloadOutlinedIcon />}
+              onClick={() => handleExport({ getRowsToExport: getFilteredRows, type: 'csv' })}
+          >
+              Export CSV
+          </Button>
+      </GridToolbarContainer>
+  );
+};
+
 
   const[opens,setOpens]=React.useState(false);
 
@@ -244,7 +347,7 @@ const[image,setImage]=useState('')
         rows={content} 
         columns={columns}
         pageSize={5}
-        components={{Toolbar: GridToolbar }}
+        components={{ Toolbar: CustomToolbar }}
         onCellDoubleClick={handleClickOpen}
         rowsPerPageOptions={[5]}
         checkboxSelection

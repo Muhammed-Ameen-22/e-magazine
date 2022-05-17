@@ -376,7 +376,7 @@ const CustomToolbar = (props) => {
 <div>
 
       <Dialog open={open} onClose={handleClose}>
-        <div>
+        <div style={{marginLeft:'22px'}}>
       {checked? <p> Active</p>:<></>}
       {!checked? <p>Inactive </p>:<></>}
       <Components.CheckBoxWrapper>
